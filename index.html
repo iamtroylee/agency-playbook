@@ -904,14 +904,19 @@ Then spend personal money from Wells Fargo as normal</div>
 // ── FIREBASE CONFIG ────────────────────────────────────────────────
 // ⚠️  Replace ALL values below with your own from Firebase Console
 const firebaseConfig = {
-  apiKey: "AIzaSyC9PAzHRNh_S1B2LJmwE1AeGHk4CQyp9Zo",
-  authDomain: "agency-playbook-10cf7.firebaseapp.com",
-  projectId: "agency-playbook-10cf7",
-  storageBucket: "agency-playbook-10cf7.firebasestorage.app",
-  messagingSenderId: "203578458016",
-  appId: "1:203578458016:web:c5f60accafd4513920eec5"
+  apiKey: "AIzaSyC9PAzHRNh_S1B2LJmwE1AeGHk4CQyp9Zo",
+  authDomain: "agency-playbook-10cf7.firebaseapp.com",
+  projectId: "agency-playbook-10cf7",
+  storageBucket: "agency-playbook-10cf7.firebasestorage.app",
+  messagingSenderId: "203578458016",
+  appId: "1:203578458016:web:c5f60accafd4513920eec5"
 };
-firebase.initializeApp(FIREBASE_CONFIG);
+
+// Initialize Firebase safely (prevents re-initialization errors)
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig); // <-- Fixed to lowercase matching your object above
+}
+
 const db  = firebase.firestore();
 const DOC = db.collection('playbook').doc('troy');
 
