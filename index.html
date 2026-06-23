@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Agency Playbook">
-<meta name="theme-color" content="#1a56db">
+<meta name="theme-color" content="#111827"> <!-- Updated to match dark top bar -->
 <link rel="manifest" href="manifest.json">
 <title>Agency Playbook v7</title>
 <!-- Firebase -->
@@ -15,22 +15,78 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-.topbar{
+  --bg:#f5f5f7;--sur:#fff;--sur2:#f0f0f5;--bdr:#e5e5ea;--bdr2:#d1d1d6;
+  --tx:#1d1d1f;--tx2:#3a3a3c;--tx3:#6e6e73;--tx4:#aeaeb2;
+  --bl:#2563eb;--bl-bg:#eff6ff;--bl-tx:#1a56db;
+  --gr:#059669;--gr-bg:#ecfdf5;--gr-tx:#1a7f4b;
+  --am:#d97706;--am-bg:#fef3e2;--am-tx:#b45309;
+  --pu:#7c3aed;--pu-bg:#f5f3ff;--pu-tx:#6d28d9;
+  --rd:#dc2626;--rd-bg:#fef2f2;--rd-tx:#dc2626;
+  --r:13px;--rsm:9px;--rxs:7px;
+}
+
+/* Updated body rules to account for sticky top header */
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:var(--bg);
+  color:var(--tx);
+  padding:16px;
+  padding-top:16px; /* Space immediately below top bar */
+  padding-bottom:50px
+}
+
+/* ── NEW TOP BAR CSS ─────────────────────────────── */
+.topbar {
   background:#111827;
   padding: calc(env(safe-area-inset-top, 0px) + 14px) 16px 12px;
-  position:sticky;
-  top:0;
-  z-index:100;
-  display:flex;
-  align-items:center;
-  justify-content:space-between
+  position: sticky;
+  top: 0;
+  margin: -16px -16px 16px -16px; /* Bleeds perfectly to screen edge */
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);padding:14px;padding-bottom:50px}
-.app-sub{font-size:13px;color:var(--tx3);margin-bottom:20px}
+.tb-left { flex: 1; }
+.topbar-title { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -.2px; }
+.topbar-sub { font-size: 11px; color: #6b7280; margin-top: 1px; display: flex; align-items: center; gap: 8px; }
+
+#sync-status { font-size: 10px; font-weight: 700; letter-spacing: .03em; padding: 2px 7px; border-radius: 10px; }
+.sy-gr { background: rgba(5,150,105,.25); color: #6ee7b7; }
+.sy-am { background: rgba(217,119,6,.25); color: #fcd34d; }
+.sy-bl { background: rgba(37,99,235,.25); color: #93c5fd; }
+.sy-rd { background: rgba(220,38,38,.25); color: #fca5a5; }
+
+.add-btn { 
+  background: var(--bl); 
+  color: #fff; 
+  border: none; 
+  border-radius: var(--rsm); 
+  padding: 8px 14px; 
+  font-size: 13px; 
+  font-weight: 700; 
+  cursor: pointer; 
+  white-space: nowrap; 
+  -webkit-tap-highlight-color: transparent; 
+}
+/* ────────────────────────────────────────────────── */
+
 /* SYNC BAR */
-#sync-bar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--sur);border-bottom:1px solid var(--bdr);margin:-14px -14px 16px;font-size:12px;font-weight:600}
-#sync-status{font-size:11px;font-weight:700;letter-spacing:.03em}
-.sy-gr{color:var(--gr-tx)}.sy-am{color:var(--am-tx)}.sy-bl{color:var(--bl-tx)}.sy-rd{color:var(--rd-tx)}
+</style>
+</head>
+<body>
+
+<!-- NEW TOP BAR HTML STRUCT MATCHING "Client Board.jpg" -->
+<div class="topbar">
+  <div class="tb-left">
+    <div class="topbar-title">Client Board</div>
+    <div class="topbar-sub">
+      <span id="ts">1 client total</span>
+      <span id="sync-status" class="sy-gr">✓ Synced</span>
+    </div>
+  </div>
+  <button class="add-btn" onclick="openNew()">+ New Client</button>
+</div>
 /* EDITABLE */
 [data-eid]{border-radius:var(--rxs);outline:none;transition:box-shadow .15s}
 [data-eid]:focus{box-shadow:0 0 0 2px var(--bl);background:var(--sur2)}
