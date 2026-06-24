@@ -71,7 +71,39 @@ body{
 }
 /* ────────────────────────────────────────────────── */
 
-/* SYNC BAR */
+/* ── TOP BAR STYLES FOR AGENCY PLAYBOOK ── */
+body { padding-top: 16px; }
+.topbar {
+  background:#111827;
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) 16px 12px;
+  position: sticky;
+  top: 0;
+  margin: -14px -14px 16px -14px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tb-left { flex: 1; }
+.topbar-title { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -.2px; }
+.topbar-sub { font-size: 11px; color: #6b7280; margin-top: 1px; display: flex; align-items: center; gap: 8px; }
+#sync-status { font-size: 10px; font-weight: 700; letter-spacing: .03em; padding: 2px 7px; border-radius: 10px; }
+.sy-gr { background: rgba(5,150,105,.25); color: #6ee7b7; }
+.sy-am { background: rgba(217,119,6,.25); color: #fcd34d; }
+.sy-bl { background: rgba(37,99,235,.25); color: #93c5fd; }
+.sy-rd { background: rgba(220,38,38,.25); color: #fca5a5; }
+.add-btn { 
+  background: var(--bl); 
+  color: #fff; 
+  border: none; 
+  border-radius: var(--rsm); 
+  padding: 8px 14px; 
+  font-size: 13px; 
+  font-weight: 700; 
+  cursor: pointer; 
+  white-space: nowrap; 
+  -webkit-tap-highlight-color: transparent; 
+}
 </style>
 </head>
 <body>
@@ -79,13 +111,13 @@ body{
 <!-- NEW TOP BAR HTML STRUCT MATCHING "Client Board.jpg" -->
 <div class="topbar">
   <div class="tb-left">
-    <div class="topbar-title">Client Board</div>
+    <div class="topbar-title">Agency Playbook</div>
     <div class="topbar-sub">
-      <span id="ts">1 client total</span>
-      <span id="sync-status" class="sy-gr">✓ Synced</span>
+      <span id="ts">v7.0</span>
+      <span id="sync-status" class="sy-bl">↓ Loading</span>
     </div>
   </div>
-  <button class="add-btn" onclick="openNew()">+ New Client</button>
+  <button class="add-btn" onclick="openNew()">+ New Strategy</button>
 </div>
 /* EDITABLE */
 [data-eid]{border-radius:var(--rxs);outline:none;transition:box-shadow .15s}
