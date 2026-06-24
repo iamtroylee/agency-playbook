@@ -5,14 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Agency Playbook</title>
   <style>
-    /* Reset screen properties for modern mobile layout */
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
     
     html, body {
-      margin: 0;
-      padding: 0;
       background-color: #000000;
     }
 
@@ -20,67 +19,64 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: #000000;
       color: var(--tx);
-      /* Left and right padding for content, bottom space for scrolling */
       padding: 0 16px 50px; 
     }
 
-    /* THE FIXED TOP NAVIGATION CONTAINER */
+    /* THE GRAY NAVIGATION CONTAINER MATCHING CLIENT BOARD CEILING */
     .topbar {
-      background: #000000;
+      /* This hex matches the dark grayish container color from your screenshots */
+      background: #1c1c1e; 
       
-      /* Explicitly pushes the content down below the iPhone notch, clock, and battery */
-      padding-top: calc(env(safe-area-inset-top, 0px) + 20px) !important;
-      padding-bottom: 16px;
+      /* Tells the gray block to pull up underneath the clock area completely */
+      padding-top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
+      padding-bottom: 12px;
       padding-left: 16px;
       padding-right: 16px;
       
-      /* Keeps it locked securely to the ceiling of the device screen */
       position: sticky;
       top: 0;
       z-index: 9999;
+      margin: 0 -16px 16px; /* Extends the gray background perfectly edge-to-edge */
       
       display: flex;
-      align-items: flex-start;
-      margin: 0 -16px 16px; /* Spans perfectly edge to edge */
+      flex-direction: column;
+      gap: 6px; 
     }
 
-    .tb-left {
-      flex: 1;
+    /* ROW 1: Title and Sync Status Badge */
+    .topbar-header-row {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
     }
 
     .topbar-title {
-      font-size: 22px;
+      font-size: 17px;
       font-weight: 700;
       color: #ffffff;
       letter-spacing: -.2px;
-      margin: 0;
     }
 
-    .topbar-sub {
-      display: flex;
-      align-items: center;
-    }
-
+    /* Clear clean green badge */
     #sync-status {
       font-size: 11px;
       font-weight: 700;
       letter-spacing: .03em;
-      padding: 3px 8px;
+      padding: 2px 8px;
       border-radius: 6px;
-      background: rgba(5, 150, 105, 0.25);
-      color: #34d399;
+      background: rgba(48, 209, 88, 0.2);
+      color: #30d158;
     }
 
+    /* ROW 2: Version layout label */
     .topbar-tabs {
       font-size: 13px;
-      color: #9ca3af;
+      color: #98989d;
       font-weight: 400;
     }
 
-    .app-sub{font-size:13px;color:var(--tx3);margin-bottom:20px}
+    .app-sub { font-size:13px; color:var(--tx3); margin-bottom:20px; }
 
     /* EDITABLE */
     [data-eid]{border-radius:var(--rxs);outline:none;transition:box-shadow .15s}
@@ -110,7 +106,7 @@
     /* BADGES */
     .pr{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
     .badge{font-size:12px;font-weight:600;padding:5px 10px;border-radius:var(--rxs)}
-    .b-bl{background:var(--bl-bg);color:var(--bl-tx)}.b-gr{background:var(--gr-bg);color:var(--gr-tx)}.b-am{background:var(--am-bg);color:var(--am-tx)}.b-gy{background:#f0f0f5;color:#5a5a6a}.b-pu{background:var(--pu-bg);color:var(--pu-tx)}.b-rd{background:var(--rd-bg);color:var(--rd-tx)}
+    .b-bl{background:var(--bl-bg);color:var(--bl-tx)}.b-gr{background:var(--gr-bg);color:var(--gr-tx)}.b-am{background:var(--am-bg);color:var(--am-tx)}.b-gy{background:#2c2c2e;color:#aeaeb2}.b-pu{background:var(--pu-bg);color:var(--pu-tx)}.b-rd{background:var(--rd-bg);color:var(--rd-tx)}
     
     /* CALLOUTS */
     .tip{background:var(--gr-bg);border-radius:var(--rsm);padding:12px 14px;font-size:13px;color:var(--gr-tx);line-height:1.6;margin-top:8px}
@@ -186,7 +182,6 @@
     .ti strong{display:block;font-size:14px;font-weight:600;margin-bottom:2px}
     .ti span{font-size:13px;color:var(--tx3);line-height:1.5}
     
-    /* SYSTEM THEME TO VARIABLES MAPPING */
     :root {
       --bg:#000;
       --sur:#1c1c1e;
@@ -215,13 +210,11 @@
 <body>
 
   <div class="topbar">
-    <div class="tb-left">
+    <div class="topbar-header-row">
       <h1 class="topbar-title">Agency Playbook</h1>
-      <div class="topbar-sub">
-        <span id="sync-status">✓ Synced</span>
-      </div>
-      <div class="topbar-tabs">v7 — 9 tabs, synced across all devices</div>
+      <span id="sync-status">✓ Synced</span>
     </div>
+    <div class="topbar-tabs">v7 — 9 tabs, synced across all devices</div>
   </div>
 
   <div class="nav">
