@@ -24,12 +24,61 @@
   --rd:#dc2626;--rd-bg:#fef2f2;--rd-tx:#dc2626;
   --r:13px;--rsm:9px;--rxs:7px;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);padding:14px;padding-bottom:50px}
-.app-sub{font-size:13px;color:var(--tx3);margin-bottom:20px}
-/* SYNC BAR */
-#sync-bar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--sur);border-bottom:1px solid var(--bdr);margin:-14px -14px 16px;font-size:12px;font-weight:600}
-#sync-status{font-size:11px;font-weight:700;letter-spacing:.03em}
-.sy-gr{color:var(--gr-tx)}.sy-am{color:var(--am-tx)}.sy-bl{color:var(--bl-tx)}.sy-rd{color:var(--rd-tx)}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #000000; /* Force pure black background like the screenshot */
+  color: var(--tx);
+  padding: 0 16px 50px; /* Removed top padding because the sticky topbar handles it */
+}
+
+/* NEW AGENCY PLAYBOOK TOPBAR WITH SAFE AREA PROTECTION */
+.topbar {
+  background: #000000;
+  /* Protects content from overlapping with the iPhone clock/status bar */
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) 16px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  margin: 0 -16px 16px; /* Bleeds perfectly to the horizontal edges of the screen */
+}
+
+.tb-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column; 
+  gap: 6px; /* Vertical gap between Title -> Sync Pill -> Tab Counter */
+}
+
+.topbar-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -.2px;
+  margin: 0;
+}
+
+.topbar-sub {
+  display: flex;
+  align-items: center;
+}
+
+#sync-status {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(5, 150, 105, 0.2); 
+  color: #34d399; /* Vibrant green from your screenshot */
+}
+
+.topbar-tabs {
+  font-size: 13px;
+  color: #9ca3af; /* Muted subtitle gray */
+  font-weight: 400;
+}
 /* EDITABLE */
 [data-eid]{border-radius:var(--rxs);outline:none;transition:box-shadow .15s}
 [data-eid]:focus{box-shadow:0 0 0 2px var(--bl);background:var(--sur2)}
