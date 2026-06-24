@@ -929,9 +929,9 @@ let initialLoad = true;
 // ── SYNC STATUS ────────────────────────────────────────────────────
 function setSyncStatus(s){
   const el=document.getElementById('sync-status');
-  const map={synced:['✓ Synced','sy-gr'],saving:['↑ Saving…','sy-am'],
-             offline:['✗ Offline','sy-rd'],loading:['↓ Loading…','sy-bl']};
-  el.className=map[s][1];el.textContent=map[s][0];
+  const map={synced:['✓ Synced','sy-gr','#16a34a'],saving:['↑ Saving…','sy-am','#b45309'],
+             offline:['✗ Offline','sy-rd','#dc2626'],loading:['↓ Loading…','sy-bl','#1a56db']};
+  el.className=map[s][1];el.textContent=map[s][0];el.style.color=map[s][2];
 }
 
 // ── APPLY STATE TO DOM ─────────────────────────────────────────────
