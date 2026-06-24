@@ -1,246 +1,1079 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Agency Playbook</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    html, body {
-      background-color: #000000;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #000000;
-      color: var(--tx);
-      padding: 0 16px 50px; 
-    }
-
-    /* THE GRAY NAVIGATION CONTAINER MATCHING CLIENT BOARD CEILING */
-    .topbar {
-      /* This hex matches the dark grayish container color from your screenshots */
-      background: #1c1c1e; 
-      
-      /* Tells the gray block to pull up underneath the clock area completely */
-      padding-top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
-      padding-bottom: 12px;
-      padding-left: 16px;
-      padding-right: 16px;
-      
-      position: sticky;
-      top: 0;
-      z-index: 9999;
-      margin: 0 -16px 16px; /* Extends the gray background perfectly edge-to-edge */
-      
-      display: flex;
-      flex-direction: column;
-      gap: 6px; 
-    }
-
-    /* ROW 1: Title and Sync Status Badge */
-    .topbar-header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-    }
-
-    .topbar-title {
-      font-size: 17px;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: -.2px;
-    }
-
-    /* Clear clean green badge */
-    #sync-status {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .03em;
-      padding: 2px 8px;
-      border-radius: 6px;
-      background: rgba(48, 209, 88, 0.2);
-      color: #30d158;
-    }
-
-    /* ROW 2: Version layout label */
-    .topbar-tabs {
-      font-size: 13px;
-      color: #98989d;
-      font-weight: 400;
-    }
-
-    .app-sub { font-size:13px; color:var(--tx3); margin-bottom:20px; }
-
-    /* EDITABLE */
-    [data-eid]{border-radius:var(--rxs);outline:none;transition:box-shadow .15s}
-    [data-eid]:focus{box-shadow:0 0 0 2px var(--bl);background:var(--sur2)}
-    
-    /* NAV */
-    .nav{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
-    .nbtn{width:100%;padding:15px 16px;border:1.5px solid var(--bdr2);border-radius:var(--r);font-size:15px;font-weight:500;cursor:pointer;background:var(--sur);color:var(--tx2);text-align:left;display:flex;align-items:center;justify-content:space-between;-webkit-tap-highlight-color:transparent}
-    .nbtn.active{background:var(--bl-bg);color:var(--bl-tx);border-color:var(--bl)}
-    .nbtn .arr{font-size:11px;opacity:.4}
-    .sec{display:none}.sec.active{display:block}
-    
-    /* COPY */
-    .cpbar{display:flex;justify-content:flex-end;margin-bottom:12px}
-    .cpbtn{padding:8px 15px;border:1.5px solid var(--bdr2);border-radius:var(--rsm);font-size:13px;font-weight:600;cursor:pointer;background:var(--sur);color:var(--tx2)}
-    
-    /* CARD */
-    .card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:16px;margin-bottom:12px}
-    
-    /* TEXT */
-    .sh{font-size:20px;font-weight:800;margin-bottom:4px;letter-spacing:-.2px}
-    .ss{font-size:14px;color:var(--tx3);margin-bottom:16px;line-height:1.55}
-    .lbl{font-size:11px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px;margin-top:14px}
-    .lbl:first-child{margin-top:0}
-    .tdesc{font-size:14px;line-height:1.65;color:var(--tx2);margin-bottom:11px}
-    
-    /* BADGES */
-    .pr{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-    .badge{font-size:12px;font-weight:600;padding:5px 10px;border-radius:var(--rxs)}
-    .b-bl{background:var(--bl-bg);color:var(--bl-tx)}.b-gr{background:var(--gr-bg);color:var(--gr-tx)}.b-am{background:var(--am-bg);color:var(--am-tx)}.b-gy{background:#2c2c2e;color:#aeaeb2}.b-pu{background:var(--pu-bg);color:var(--pu-tx)}.b-rd{background:var(--rd-bg);color:var(--rd-tx)}
-    
-    /* CALLOUTS */
-    .tip{background:var(--gr-bg);border-radius:var(--rsm);padding:12px 14px;font-size:13px;color:var(--gr-tx);line-height:1.6;margin-top:8px}
-    .warn{background:var(--am-bg);border-radius:var(--rsm);padding:12px 14px;font-size:13px;color:var(--am-tx);line-height:1.6;margin-top:8px}
-    .info{background:var(--bl-bg);border-radius:var(--rsm);padding:12px 14px;font-size:13px;color:var(--bl-tx);line-height:1.6;margin-top:8px}
-    .danger{background:var(--rd-bg);border-radius:var(--rsm);padding:12px 14px;font-size:13px;color:var(--rd-tx);line-height:1.6;margin-top:8px}
-    
-    /* ROWS */
-    .row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--bdr);gap:12px}
-    .row:last-child{border-bottom:none}
-    .rl{flex:1}.rl strong{display:block;font-size:14px;font-weight:700;margin-bottom:2px}.rl small{font-size:13px;color:var(--tx3);line-height:1.5}
-    .price{font-size:14px;font-weight:700;text-align:right;white-space:nowrap}
-    .trial{display:block;font-size:11px;color:var(--gr-tx);margin-top:2px;font-weight:500}
-    .tot-row{display:flex;justify-content:space-between;padding:12px 0 0;border-top:2px solid var(--bdr2);margin-top:4px}
-    .tot-l{font-size:16px;font-weight:700}
-    .tot-p{font-size:18px;font-weight:800;color:var(--gr-tx)}
-    .divider{height:1px;background:var(--bdr);margin:12px 0}
-    
-    /* SCRIPT */
-    .script{background:var(--sur2);color:var(--tx);border-left:3px solid var(--bl);border-radius:0 var(--rsm) var(--rsm) 0;padding:12px 14px;font-size:14px;line-height:1.75;margin-bottom:10px;white-space:pre-wrap}
-    
-    /* TEMPLATE LABEL */
-    .tlbl{font-size:12px;font-weight:700;color:var(--bl-tx);background:var(--bl-bg);padding:5px 10px;border-radius:var(--rxs);display:inline-block;margin-bottom:9px}
-    
-    /* FOR ME / FOR CLIENT */
-    .for-me{font-size:11px;font-weight:700;color:var(--pu-tx);background:var(--pu-bg);padding:3px 9px;border-radius:20px;display:inline-block;margin-bottom:6px}
-    .for-client{font-size:11px;font-weight:700;color:var(--gr-tx);background:var(--gr-bg);padding:3px 9px;border-radius:20px;display:inline-block;margin-bottom:6px}
-    
-    /* STEPS */
-    .step{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--bdr)}
-    .step:last-child{border-bottom:none}
-    .sn{min-width:27px;height:27px;background:var(--bl);color:#fff;border-radius:50%;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-    .st strong{display:block;font-size:14px;font-weight:700;margin-bottom:2px}
-    .st span{font-size:13px;color:var(--tx3);line-height:1.5}
-    
-    /* CHECKLIST */
-    .phase{margin-bottom:12px}
-    .phase-hdr{display:flex;align-items:center;gap:10px;padding:13px 14px;background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);cursor:pointer;-webkit-tap-highlight-color:transparent}
-    .phase-hdr.open{border-radius:var(--r) var(--r) 0 0;border-bottom-color:transparent}
-    .phase-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
-    .phase-info{flex:1}.phase-info strong{display:block;font-size:14px;font-weight:700}.phase-info span{font-size:12px;color:var(--tx3)}
-    .phase-stat{font-size:12px;font-weight:700;color:var(--tx3)}
-    .phase-ch{font-size:11px;color:var(--tx4);margin-left:5px;display:inline-block;transition:transform .2s}.phase-ch.open{transform:rotate(180deg)}
-    .phase-body{display:none;background:var(--sur);border:1px solid var(--bdr);border-top:none;border-radius:0 0 var(--r) var(--r)}.phase-body.open{display:block}
-    .cl-item{display:flex;align-items:flex-start;gap:11px;padding:11px 14px;border-bottom:1px solid var(--bg)}
-    .cl-item:last-child{border-bottom:none}
-    .cl-box{width:22px;height:22px;border:2px solid var(--bdr2);border-radius:6px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s}
-    .cl-box.done{background:var(--gr);border-color:var(--gr)}
-    .cl-box.done::after{content:'✓';font-size:12px;color:#fff;font-weight:800}
-    .cl-text strong{display:block;font-size:14px;font-weight:600;margin-bottom:2px;line-height:1.4}
-    .cl-text strong.done{color:var(--tx3);text-decoration:line-through}
-    .cl-text span{font-size:12px;color:var(--tx3);line-height:1.5}
-    .pb {height:4px;background:var(--bdr);border-radius:2px;margin:7px 14px 3px;overflow:hidden}
-    .pf{height:100%;background:var(--gr);border-radius:2px;transition:width .3s}
-    .pl{font-size:11px;color:var(--tx3);padding:0 14px 7px}
-    
-    /* OVERALL */
-    .ov-card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:14px 16px;margin-bottom:14px}
-    .ov-top{display:flex;justify-content:space-between;margin-bottom:7px}
-    .ov-title{font-size:14px;font-weight:700}
-    .ov-pct{font-size:14px;font-weight:800;color:var(--gr-tx)}
-    
-    /* SECTION LABEL */
-    .sec-lbl{font-size:12px;font-weight:700;color:var(--bl-tx);background:var(--bl-bg);padding:5px 11px;border-radius:var(--rxs);display:block;margin:14px 0 8px}
-    .sec-lbl:first-child{margin-top:0}
-    
-    /* TAX / SETUP CHECKBOXES */
-    .tax-item{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--bdr)}
-    .tax-item:last-child{border-bottom:none}
-    .tcb{width:22px;height:22px;border:2px solid var(--bdr2);border-radius:6px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s}
-    .tcb.done{background:var(--gr);border-color:var(--gr)}
-    .tcb.done::after{content:'✓';font-size:12px;color:#fff;font-weight:800}
-    .ti strong{display:block;font-size:14px;font-weight:600;margin-bottom:2px}
-    .ti span{font-size:13px;color:var(--tx3);line-height:1.5}
-    
-    :root {
-      --bg:#000;
-      --sur:#1c1c1e;
-      --sur2:#2c2c2e;
-      --bdr:#2c2c2e;
-      --bdr2:#3a3a3c;
-      --tx:#f5f5f7;
-      --tx2:#e5e5ea;
-      --tx3:#98989d;
-      --tx4:#636366;
-      --bl:#2563eb;
-      --bl-bg:#162247;
-      --bl-tx:#6fa3f8;
-      --gr:#30d158;
-      --gr-bg:#0d2d1f;
-      --gr-tx:#30d158;
-      --am-bg:#2d1f00;
-      --am-tx:#f59e0b;
-      --pu-bg:#1e1347;
-      --pu-tx:#a78bfa;
-      --rd-bg:#2d0f0f;
-      --rd-tx:#f87171;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Agency Playbook">
+<meta name="theme-color" content="#1a56db">
+<link rel="manifest" href="manifest.json">
+<title>Agency Playbook v7</title>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f5f7;--sur:#fff;--sur2:#f0f0f5;--bdr:#e5e5ea;--bdr2:#d1d1d6;
+  --tx:#1d1d1f;--tx2:#3a3a3c;--tx3:#6e6e73;--tx4:#aeaeb2;
+  --bl:#2563eb;--bl-bg:#eff6ff;--bl-tx:#1a56db;
+  --gr:#059669;--gr-bg:#ecfdf5;--gr-tx:#1a7f4b;
+  --am:#d97706;--am-bg:#fef3e2;--am-tx:#b45309;
+  --pu:#7c3aed;--pu-bg:#f5f3ff;--pu-tx:#6d28d9;
+  --rd:#dc2626;--rd-bg:#fef2f2;--rd-tx:#dc2626;
+  --r:13px;--rsm:9px;--rxs:7px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);padding:14px;padding-bottom:50px}
+.app-sub{font-size:13px;color:var(--tx3);margin-bottom:20px}
+/* SYNC BAR */
+#sync-bar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--sur);border-bottom:1px solid var(--bdr);margin:-14px -14px 16px;font-size:12px;font-weight:600}
+#sync-status{font-size:11px;font-weight:700;letter-spacing:.03em}
+.sy-gr{color:var(--gr-tx)}.sy-am{color:var(--am-tx)}.sy-bl{color:var(--bl-tx)}.sy-rd{color:var(--rd-tx)}
+/* EDITABLE */
+[data-eid]{border-radius:var(--rxs);outline:none;transition:box-shadow .15s}
+[data-eid]:focus{box-shadow:0 0 0 2px var(--bl);background:var(--sur2)}
+/* NAV */
+.nav{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.nbtn{width:100%;padding:15px 16px;border:1.5px solid var(--bdr2);border-radius:var(--r);font-size:15px;font-weight:500;cursor:pointer;background:var(--sur);color:var(--tx2);text-align:left;display:flex;align-items:center;justify-content:space-between;-webkit-tap-highlight-color:transparent}
+.nbtn.active{background:var(--bl-bg);color:var(--bl-tx);border-color:var(--bl)}
+.nbtn .arr{font-size:11px;opacity:.4}
+.sec{display:none}.sec.active{display:block}
+/* COPY */
+.cpbar{display:flex;justify-content:flex-end;margin-bottom:12px}
+.cpbtn{padding:8px 15px;border:1.5px solid var(--bdr2);border-radius:var(--rsm);font-size:13px;font-weight:600;cursor:pointer;background:var(--sur);color:var(--tx2)}
+/* CARD */
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:16px;margin-bottom:12px}
+/* TEXT */
+.sh{font-size:20px;font-weight:800;margin-bottom:4px;letter-spacing:-.2px}
+.ss{font-size:14px;color:var(--tx3);margin-bottom:16px;line-height:1.55}
+.lbl{font-size:11px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px;margin-top:14px}
+.lbl:first-child{margin-top:0}
+.tdesc{font-size:14px;line-height:1.65;color:var(--tx2);margin-bottom:11px}
+/* BADGES */
+.pr{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.badge{font-size:12px;font-weight:600;padding:5px 10px;border-radius:var(--rxs)}
+.b-bl{background:var(--bl-bg);color:var(--bl-tx)}.b-gr{background:var(--gr-bg);color:var(--gr-tx)}.b-am{background:var(--am-bg);color:var(--am-tx)}.b-gy{background:#f0f0f5;color:#5a5a6a}.b-pu{background:var(--pu-bg);color:var(--pu-tx)}.b-rd{background:var(--rd-bg);color:var(--rd-tx)}
+/* CALLOUTS */
+.tip{background:var(--gr-bg);border-radius:var(--rsm);padding:12px 14px;font-size:13px;color:var(--gr-tx);line-height:1.6;margin-top:8px}
+.warn{background:var(--am-bg);border-radius:var(--rsm);padding:12px 14px;font-size:13px;color:var(--am-tx);line-height:1.6;margin-top:8px}
+.info{background:var(--bl-bg);border-radius:var(--rsm);padding:12px 14px;font-size:13px;color:var(--bl-tx);line-height:1.6;margin-top:8px}
+.danger{background:var(--rd-bg);border-radius:var(--rsm);padding:12px 14px;font-size:13px;color:var(--rd-tx);line-height:1.6;margin-top:8px}
+/* ROWS */
+.row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--bdr);gap:12px}
+.row:last-child{border-bottom:none}
+.rl{flex:1}.rl strong{display:block;font-size:14px;font-weight:700;margin-bottom:2px}.rl small{font-size:13px;color:var(--tx3);line-height:1.5}
+.price{font-size:14px;font-weight:700;text-align:right;white-space:nowrap}
+.trial{display:block;font-size:11px;color:var(--gr-tx);margin-top:2px;font-weight:500}
+.tot-row{display:flex;justify-content:space-between;padding:12px 0 0;border-top:2px solid var(--bdr2);margin-top:4px}
+.tot-l{font-size:16px;font-weight:700}
+.tot-p{font-size:18px;font-weight:800;color:var(--gr-tx)}
+.divider{height:1px;background:var(--bdr);margin:12px 0}
+/* SCRIPT */
+.script{background:var(--bg);border-left:3px solid var(--bl);border-radius:0 var(--rsm) var(--rsm) 0;padding:12px 14px;font-size:14px;line-height:1.75;color:var(--tx);margin-bottom:10px;white-space:pre-wrap}
+/* TEMPLATE LABEL */
+.tlbl{font-size:12px;font-weight:700;color:var(--bl-tx);background:var(--bl-bg);padding:5px 10px;border-radius:var(--rxs);display:inline-block;margin-bottom:9px}
+/* FOR ME / FOR CLIENT */
+.for-me{font-size:11px;font-weight:700;color:var(--pu-tx);background:var(--pu-bg);padding:3px 9px;border-radius:20px;display:inline-block;margin-bottom:6px}
+.for-client{font-size:11px;font-weight:700;color:var(--gr-tx);background:var(--gr-bg);padding:3px 9px;border-radius:20px;display:inline-block;margin-bottom:6px}
+/* STEPS */
+.step{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--bdr)}
+.step:last-child{border-bottom:none}
+.sn{min-width:27px;height:27px;background:var(--bl);color:#fff;border-radius:50%;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.st strong{display:block;font-size:14px;font-weight:700;margin-bottom:2px}
+.st span{font-size:13px;color:var(--tx3);line-height:1.5}
+/* CHECKLIST */
+.phase{margin-bottom:12px}
+.phase-hdr{display:flex;align-items:center;gap:10px;padding:13px 14px;background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.phase-hdr.open{border-radius:var(--r) var(--r) 0 0;border-bottom-color:transparent}
+.phase-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
+.phase-info{flex:1}.phase-info strong{display:block;font-size:14px;font-weight:700}.phase-info span{font-size:12px;color:var(--tx3)}
+.phase-stat{font-size:12px;font-weight:700;color:var(--tx3)}
+.phase-ch{font-size:11px;color:var(--tx4);margin-left:5px;display:inline-block;transition:transform .2s}.phase-ch.open{transform:rotate(180deg)}
+.phase-body{display:none;background:var(--sur);border:1px solid var(--bdr);border-top:none;border-radius:0 0 var(--r) var(--r)}.phase-body.open{display:block}
+.cl-item{display:flex;align-items:flex-start;gap:11px;padding:11px 14px;border-bottom:1px solid var(--bg)}
+.cl-item:last-child{border-bottom:none}
+.cl-box{width:22px;height:22px;border:2px solid var(--bdr2);border-radius:6px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s}
+.cl-box.done{background:var(--gr);border-color:var(--gr)}
+.cl-box.done::after{content:'✓';font-size:12px;color:#fff;font-weight:800}
+.cl-text strong{display:block;font-size:14px;font-weight:600;margin-bottom:2px;line-height:1.4}
+.cl-text strong.done{color:var(--tx3);text-decoration:line-through}
+.cl-text span{font-size:12px;color:var(--tx3);line-height:1.5}
+.pb{height:4px;background:var(--bdr);border-radius:2px;margin:7px 14px 3px;overflow:hidden}
+.pf{height:100%;background:var(--gr);border-radius:2px;transition:width .3s}
+.pl{font-size:11px;color:var(--tx3);padding:0 14px 7px}
+/* OVERALL */
+.ov-card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:14px 16px;margin-bottom:14px}
+.ov-top{display:flex;justify-content:space-between;margin-bottom:7px}
+.ov-title{font-size:14px;font-weight:700}
+.ov-pct{font-size:14px;font-weight:800;color:var(--gr-tx)}
+/* SECTION LABEL */
+.sec-lbl{font-size:12px;font-weight:700;color:var(--bl-tx);background:var(--bl-bg);padding:5px 11px;border-radius:var(--rxs);display:block;margin:14px 0 8px}
+.sec-lbl:first-child{margin-top:0}
+/* TAX / SETUP CHECKBOXES */
+.tax-item{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--bdr)}
+.tax-item:last-child{border-bottom:none}
+.tcb{width:22px;height:22px;border:2px solid var(--bdr2);border-radius:6px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s}
+.tcb.done{background:var(--gr);border-color:var(--gr)}
+.tcb.done::after{content:'✓';font-size:12px;color:#fff;font-weight:800}
+.ti strong{display:block;font-size:14px;font-weight:600;margin-bottom:2px}
+.ti span{font-size:13px;color:var(--tx3);line-height:1.5}
+/* DARK */
+@media(prefers-color-scheme:dark){
+  :root{--bg:#000;--sur:#1c1c1e;--sur2:#2c2c2e;--bdr:#2c2c2e;--bdr2:#3a3a3c;--tx:#f5f5f7;--tx2:#e5e5ea;--tx3:#98989d;--tx4:#636366;--bl-bg:#162247;--bl-tx:#6fa3f8;--gr-bg:#0d2d1f;--gr-tx:#30d158;--am-bg:#2d1f00;--am-tx:#f59e0b;--pu-bg:#1e1347;--pu-tx:#a78bfa;--rd-bg:#2d0f0f;--rd-tx:#f87171}
+  .b-gy{background:#2c2c2e;color:#aeaeb2}
+  .phase-hdr,.phase-body{background:var(--sur)}
+  .cl-item{border-color:var(--bg)}
+  .nbtn{background:var(--sur);color:var(--tx2)}
+  .script{background:var(--sur2);color:var(--tx)}
+  .cpbtn{background:var(--sur);color:var(--tx2)}
+  #sync-bar{background:var(--sur);border-color:var(--bdr)}
+}
+</style>
 </head>
 <body>
+<div id="sync-bar">
+  <span style="font-size:13px;font-weight:800;letter-spacing:-.2px">Agency Playbook</span>
+  <span id="sync-status" class="sy-bl">↓ Loading…</span>
+</div>
+<p class="app-sub">v7 — 9 tabs, synced across all devices</p>
 
-  <div class="topbar">
-    <div class="topbar-header-row">
-      <h1 class="topbar-title">Agency Playbook</h1>
-      <span id="sync-status">✓ Synced</span>
-    </div>
-    <div class="topbar-tabs">v7 — 9 tabs, synced across all devices</div>
-  </div>
+<div class="nav">
+  <button class="nbtn active" onclick="show('s1',this)"><span>💼 Services &amp; pricing</span><span class="arr">▼</span></button>
+  <button class="nbtn" onclick="show('s2',this)"><span>✅ Client journey checklist</span><span class="arr">▶</span></button>
+  <button class="nbtn" onclick="show('s3',this)"><span>📞 Scripts &amp; outreach</span><span class="arr">▶</span></button>
+  <button class="nbtn" onclick="show('s4',this)"><span>📋 Client templates</span><span class="arr">▶</span></button>
+  <button class="nbtn" onclick="show('s5',this)"><span>🛠 Setup, stack &amp; tools</span><span class="arr">▶</span></button>
+  <button class="nbtn" onclick="show('s6',this)"><span>🌐 Your agency website</span><span class="arr">▶</span></button>
+  <button class="nbtn" onclick="show('s7',this)"><span>🏦 Money, banking &amp; getting paid</span><span class="arr">▶</span></button>
+  <button class="nbtn" onclick="show('s8',this)"><span>🧾 Taxes (freelance / sole proprietor)</span><span class="arr">▶</span></button>
+  <button class="nbtn" onclick="show('s9',this)"><span>🏁 Master start-up checklist</span><span class="arr">▶</span></button>
+</div>
+<!-- ═══ S1: SERVICES & PRICING ═══ -->
+<div id="s1" class="sec active">
+<div class="cpbar"><button class="cpbtn" id="c1" onclick="cp('s1c','c1')">Copy 📋</button></div>
+<div id="s1c">
+<p class="sh">What your agency delivers</p>
+<p class="ss">Three tiers. Beginner pricing for first clients, standard once you have proof. Never show all three on a call — present the one that fits.</p>
 
-  <div class="nav">
-    <button class="nbtn active">💼 Services & pricing <span class="arr">▼</span></button>
-    <button class="nbtn">✅ Client journey checklist <span class="arr">▶</span></button>
-    <button class="nbtn">📞 Scripts & outreach <span class="arr">▶</span></button>
-    <button class="nbtn">📋 Client templates <span class="arr">▶</span></button>
-    <button class="nbtn">🛠 Setup, stack & tools <span class="arr">▶</span></button>
-    <button class="nbtn">🌐 Your agency website <span class="arr">▶</span></button>
-    <button class="nbtn">🏦 Money, banking & getting paid <span class="arr">▶</span></button>
-    <button class="nbtn">📋 Taxes (freelance / sole proprietor) <span class="arr">▶</span></button>
-    <button class="nbtn">🏁 Master start-up checklist <span class="arr">▶</span></button>
-  </div>
+<div class="card">
+  <div class="lbl">Tier 1 — "The Foundation"</div>
+  <div style="font-size:16px;font-weight:700;margin-bottom:7px">AI Website + Lead Capture</div>
+  <div class="tdesc">A fast, modern website with a smart contact form that auto-responds, qualifies leads, and routes inquiries instantly — no more missed customers at 11pm.</div>
+  <div class="pr"><span class="badge b-gy">Beginner: $400–$600 setup</span><span class="badge b-bl">Standard: $800–$1,200</span></div>
+  <div class="pr"><span class="badge b-gr">Monthly: $99–$150</span><span class="badge b-am">Includes 1 hr changes/mo</span></div>
+  <div class="tip">🎯 First 1–2 clients: $400 setup + $99/mo. Goal is a testimonial, not max revenue. Build it in under a week.</div>
+</div>
 
-  <div class="cpbar">
-    <button class="cpbtn">Copy 📋</button>
-  </div>
+<div class="card">
+  <div class="lbl">Tier 2 — "The Closer" ⭐ Main offer</div>
+  <div style="font-size:16px;font-weight:700;margin-bottom:7px">Website + AI Chatbot + Review Automation</div>
+  <div class="tdesc">Everything in Tier 1 plus a 24/7 AI chatbot trained on their business, plus automated Google review requests texted after every customer visit — the #1 driver of local search ranking.</div>
+  <div class="pr"><span class="badge b-gy">Beginner: $800–$1,200 setup</span><span class="badge b-bl">Standard: $1,500–$2,500</span></div>
+  <div class="pr"><span class="badge b-gr">Monthly: $200–$350</span><span class="badge b-am">Includes 1 hr changes/mo</span></div>
+  <div class="tip">🎯 This is your workhorse offer. Pitch it at clients 3–5 at beginner rate, standard rate after 2 testimonials.</div>
+</div>
 
-  <h2 class="sh">What your agency delivers</h2>
-  <p class="ss">Three tiers. Beginner pricing for first clients, standard once you have proof. Never show all three on a call — present the one that fits.</p>
+<div class="card">
+  <div class="lbl">Tier 3 — "The Full Stack"</div>
+  <div style="font-size:16px;font-weight:700;margin-bottom:7px">Complete AI Business Automation</div>
+  <div class="tdesc">Website, chatbot, CRM pipeline, automated text + email follow-up, missed-call-text-back, appointment reminders, live dashboard, and the GHL Client App so they manage leads from their phone.</div>
+  <div class="pr"><span class="badge b-gy">Beginner: $1,500–$2,000 setup</span><span class="badge b-bl">Standard: $2,500–$4,000</span></div>
+  <div class="pr"><span class="badge b-gr">Monthly: $400–$600</span><span class="badge b-am">Includes 2 hrs changes/mo</span></div>
+  <div class="warn">⚠️ Don't pitch Tier 3 until you have 3+ clients. The build is complex — a rough first experience costs more than you earn.</div>
+</div>
 
-  <div class="card">
-    <div class="lbl">TIER 1 — "THE FOUNDATION"</div>
-    <h3 class="sh" style="font-size:18px;">AI Website + Lead Capture</h3>
-    <p class="tdesc">A fast, modern website with a smart contact form that auto-responds, qualifies leads, and routes inquiries instantly — no more missed customers.</p>
-  </div>
+<div class="card">
+  <div class="lbl">Changes policy — tell clients this exactly</div>
+  <div class="tdesc" style="margin-bottom:0">Your retainer includes [1 or 2] hours of changes per month — things like updating hours, swapping a photo, tweaking copy, or adjusting chatbot responses. Anything beyond that is billed at $75–$100/hr so you only pay for what you actually need.</div>
+</div>
 
+<div class="card">
+  <div class="lbl">Revenue arc (realistic)</div>
+  <div class="row"><div class="rl"><strong>Month 1–2</strong><small>1 client @ $400 setup + $99/mo. Cover stack, get testimonial.</small></div><div class="price" style="color:var(--tx3)">$499</div></div>
+  <div class="row"><div class="rl"><strong>Month 3–4</strong><small>2 more @ $800 + $150/mo. Now profitable.</small></div><div class="price" style="color:var(--am-tx)">~$1,900</div></div>
+  <div class="row"><div class="rl"><strong>Month 5–6</strong><small>2 Tier 2 at standard + 3 retainers running.</small></div><div class="price" style="color:var(--gr-tx)">$2k–$4k/mo</div></div>
+</div>
+
+<div class="card">
+  <div class="lbl">When they push back on price</div>
+  <div class="script">"I totally get it — it feels like a lot upfront. Quick question though: what do you think it's costing you right now when someone reaches out at 10pm and doesn't hear back until the next morning? Usually that's 3–5 leads a week just evaporating. Most clients make back the monthly cost within the first couple of missed leads they would have lost. Want me to show you the math?"</div>
+</div>
+
+<div class="card">
+  <div class="lbl">When a client wants to cancel</div>
+  <div class="script">"Totally understand — before we do anything, can I ask what's feeling off? I want to make sure it's not something I can fix in the next week. If it's budget, I can look at adjusting the tier. If it's not working the way you hoped, I'd love 7 days to show you what a couple of tweaks would do."</div>
+  <div class="tip">💡 Most cancellations are fixable in the first 60 seconds of the call. Don't accept the cancel until you've understood the real reason.</div>
+</div>
+
+<div class="card">
+  <div class="lbl">Scope creep — when they keep adding "one more thing"</div>
+  <div class="script">"Happy to add that — just so we're on the same page, that would fall outside the included hour for this month, so it'll be $[75–100]/hr. Should take about [X] hours. Want me to go ahead and let you know the total before I start?"</div>
+</div>
+</div>
+</div>
+<!-- ═══ S2: CLIENT CHECKLIST ═══ -->
+<div id="s2" class="sec">
+<div class="cpbar"><button class="cpbtn" id="c2" onclick="cp('s2c','c2')">Copy 📋</button></div>
+<div id="s2c">
+<p class="sh">Client journey checklist</p>
+<p class="ss">Every step from finding a lead to ongoing monthly service. Tap to check off.</p>
+<div class="ov-card">
+  <div class="ov-top"><span class="ov-title">Overall progress</span><span class="ov-pct" id="ov-pct">0%</span></div>
+  <div class="pb" style="margin:0 0 5px"><div class="pf" id="ov-fill" style="width:0%"></div></div>
+  <div style="font-size:12px;color:var(--tx3)" id="ov-lbl">0 of 35 steps complete</div>
+</div>
+
+<div class="phase" data-phase="0">
+<div class="phase-hdr" onclick="tph(this)"><div class="phase-dot" style="background:#2563eb">1</div><div class="phase-info"><strong>Find &amp; qualify a lead</strong><span>Before first contact</span></div><span class="phase-stat" id="pst-0">0/5</span><span class="phase-ch" id="pch-0">▼</span></div>
+<div class="phase-body" id="pb-0">
+<div class="pb"><div class="pf" id="pf-0" style="width:0%"></div></div><div class="pl" id="pl-0">0 of 5</div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,0)"></div><div class="cl-text"><strong>Search Google Maps for business type — look for under 50 reviews, no chatbot</strong><span>Start with "[salon/chiropractor/gym/etc.] [city]"</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,0)"></div><div class="cl-text"><strong>Count their Google reviews — note the exact number</strong><span>Drop this in your outreach. Signals you actually looked.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,0)"></div><div class="cl-text"><strong>Fill out their contact form and time the response</strong><span>Over 30 min or silence = your opening line.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,0)"></div><div class="cl-text"><strong>Check Instagram / Facebook activity level</strong><span>Active account = owner paying attention = better prospect.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,0)"></div><div class="cl-text"><strong>Note one specific genuine observation about their business</strong><span>Something real — their vibe, a menu item, a post. Goes in your DM. Don't skip.</span></div></div>
+</div></div>
+
+<div class="phase" data-phase="1">
+<div class="phase-hdr" onclick="tph(this)"><div class="phase-dot" style="background:#7c3aed">2</div><div class="phase-info"><strong>Make first contact</strong><span>Outreach to booked call</span></div><span class="phase-stat" id="pst-1">0/4</span><span class="phase-ch" id="pch-1">▼</span></div>
+<div class="phase-body" id="pb-1">
+<div class="pb"><div class="pf" id="pf-1" style="width:0%"></div></div><div class="pl" id="pl-1">0 of 4</div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,1)"></div><div class="cl-text"><strong>Send warm DM or cold email</strong><span>Pick angle: after-hours lead response vs. Google reviews. 5 sentences max on DMs.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,1)"></div><div class="cl-text"><strong>Follow up after 5–7 days if no reply</strong><span>One follow-up is standard. Two is the max.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,1)"></div><div class="cl-text"><strong>Book 20-min demo call — call it a "quick look"</strong><span>Not a "sales call." Zoom or local coffee both work.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,1)"></div><div class="cl-text"><strong>Prep Loom demo or screen share before the call</strong><span>Anonymized real setup or a demo you built. Seeing it converts 3x better than describing it.</span></div></div>
+</div></div>
+
+<div class="phase" data-phase="2">
+<div class="phase-hdr" onclick="tph(this)"><div class="phase-dot" style="background:#d97706">3</div><div class="phase-info"><strong>Run the demo call</strong><span>20 minutes to a verbal yes</span></div><span class="phase-stat" id="pst-2">0/6</span><span class="phase-ch" id="pch-2">▼</span></div>
+<div class="phase-body" id="pb-2">
+<div class="pb"><div class="pf" id="pf-2" style="width:0%"></div></div><div class="pl" id="pl-2">0 of 6</div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,2)"></div><div class="cl-text"><strong>Open with 2 diagnostic questions — no pitch yet</strong><span>"How do most new customers find you?" and "What's your busiest time of week?"</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,2)"></div><div class="cl-text"><strong>Show the demo and narrate why it matters for their specific business</strong><span>"This is what your customer sees at 10pm — instant reply, qualifying question, booking."</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,2)"></div><div class="cl-text"><strong>Ask: "Can you see this being useful for [their business name]?"</strong><span>Soft close before pricing. Almost everyone says yes here.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,2)"></div><div class="cl-text"><strong>Present ONE tier — the right one for what you heard</strong><span>"For a business like yours I'd start here." Don't show all three.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,2)"></div><div class="cl-text"><strong>State pricing clearly — then stop talking</strong><span>"Setup is $[X] and $[X]/mo — includes 1 hour of changes per month." Wait.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,2)"></div><div class="cl-text"><strong>Confirm next steps before hanging up</strong><span>"I'll send contract and 50% deposit invoice today. Done within a week."</span></div></div>
+</div></div>
+
+<div class="phase" data-phase="3">
+<div class="phase-hdr" onclick="tph(this)"><div class="phase-dot" style="background:#059669">4</div><div class="phase-info"><strong>Onboard &amp; build</strong><span>Deposit to launch in 7 days</span></div><span class="phase-stat" id="pst-3">0/8</span><span class="phase-ch" id="pch-3">▼</span></div>
+<div class="phase-body" id="pb-3">
+<div class="pb"><div class="pf" id="pf-3" style="width:0%"></div></div><div class="pl" id="pl-3">0 of 8</div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,3)"></div><div class="cl-text"><strong>Send contract + 50% deposit invoice same day</strong><span>Don't start work until deposit clears. Zoho Invoice + Stripe.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,3)"></div><div class="cl-text"><strong>Send onboarding form link</strong><span>Google Form with the 19 essentials. Captures everything without a back-and-forth.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,3)"></div><div class="cl-text"><strong>Set up their GHL sub-account</strong><span>Business info, connect SMS number, set up calendar if doing appointments.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,3)"></div><div class="cl-text"><strong>Build website in GHL AI Studio</strong><span>Use onboarding form info. 5 sections max: hero, services, about, reviews, contact.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,3)"></div><div class="cl-text"><strong>Build automations: chatbot, review requests, follow-up</strong><span>After-hours chatbot, post-visit review text, missed-call-text-back (Tier 2+).</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,3)"></div><div class="cl-text"><strong>Set up GHL Client App for the business owner</strong><span>Sub-account → Settings → Mobile App → white-label and send download link. They manage leads from their phone.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,3)"></div><div class="cl-text"><strong>Test everything yourself before client sees it</strong><span>Fill form. Trigger chatbot. Check review request fires. Test the client app login.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,3)"></div><div class="cl-text"><strong>Collect final 50% invoice on launch day — before handing over access</strong><span>After they have access is too late.</span></div></div>
+</div></div>
+
+<div class="phase" data-phase="4">
+<div class="phase-hdr" onclick="tph(this)"><div class="phase-dot" style="background:#dc2626">5</div><div class="phase-info"><strong>Launch &amp; handoff</strong><span>Make them feel the win</span></div><span class="phase-stat" id="pst-4">0/6</span><span class="phase-ch" id="pch-4">▼</span></div>
+<div class="phase-body" id="pb-4">
+<div class="pb"><div class="pf" id="pf-4" style="width:0%"></div></div><div class="pl" id="pl-4">0 of 6</div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,4)"></div><div class="cl-text"><strong>Do 30-min walkthrough call at launch</strong><span>Show: site, chatbot, where leads appear in GHL, and the Client App on their phone.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,4)"></div><div class="cl-text"><strong>Walk them through the GHL Client App download live on the call</strong><span>Show lead notifications, conversation view, review requests. This is the moment they feel like they got something real.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,4)"></div><div class="cl-text"><strong>Send "How It Works" 1-pager after the call</strong><span>Template in Client Templates tab.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,4)"></div><div class="cl-text"><strong>Set up recurring monthly invoice in Zoho</strong><span>Auto-charges on the 1st. Set up now while they're happy.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,4)"></div><div class="cl-text"><strong>Ask for a Google review right after the launch call</strong><span>"If you're happy with how everything looks, a quick Google review really helps my business."</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,4)"></div><div class="cl-text"><strong>Send Week 1 check-in text on day 7</strong><span>"Hey [name] — checking in! How's everything running?"</span></div></div>
+</div></div>
+
+<div class="phase" data-phase="5">
+<div class="phase-hdr" onclick="tph(this)"><div class="phase-dot" style="background:#0891b2">6</div><div class="phase-info"><strong>Monthly ongoing service</strong><span>Keep them happy and growing</span></div><span class="phase-stat" id="pst-5">0/6</span><span class="phase-ch" id="pch-5">▼</span></div>
+<div class="phase-body" id="pb-5">
+<div class="pb"><div class="pf" id="pf-5" style="width:0%"></div></div><div class="pl" id="pl-5">0 of 6</div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,5)"></div><div class="cl-text"><strong>Send monthly results snapshot text on the 1st</strong><span>Leads, new reviews, chatbot chats. 5 min. Reminds them it's working.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,5)"></div><div class="cl-text"><strong>Track change requests and time spent per client</strong><span>If they regularly hit the included hour, that's your upgrade pitch.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,5)"></div><div class="cl-text"><strong>Quarterly 15-min check-in call</strong><span>What's working, what's changed, plant upgrade seed.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,5)"></div><div class="cl-text"><strong>Pitch tier upgrade at 90 days</strong><span>"Based on what I'm seeing, I think you'd get a lot out of adding [X]."</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,5)"></div><div class="cl-text"><strong>Roll to month-to-month after 3-month minimum</strong><span>"Everything's great — want to keep going month-to-month?" Almost everyone says yes.</span></div></div>
+<div class="cl-item"><div class="cl-box" onclick="tck(this,5)"></div><div class="cl-text"><strong>Ask for 60-sec video testimonial at 90 days</strong><span>"Would you record a quick video saying what you've noticed? I'd use it on my website."</span></div></div>
+</div></div>
+</div>
+</div>
+<!-- ═══ S3: SCRIPTS & OUTREACH ═══ -->
+<div id="s3" class="sec">
+<div class="cpbar"><button class="cpbtn" id="c3" onclick="cp('s3c','c3')">Copy 📋</button></div>
+<div id="s3c">
+<p class="sh">Scripts &amp; outreach templates</p>
+<p class="ss">Cold calls, DMs, emails, follow-ups, and referral asks — all in one place.</p>
+
+<div class="card">
+  <div class="lbl">Cold call — main script (lead response angle)</div>
+  <span class="for-me">🔒 For you</span>
+  <div class="script">"Hey, this is [your name] — I run a local AI agency. I work with small businesses to automate the stuff that's costing them customers without them realizing it. Do you have like 60 seconds?"
+
+[They say yes.]
+
+"Quick question — when someone finds you online at 9 or 10pm and fills out a form or sends a DM, what happens? Do they hear back right away, or is that more of a next-morning thing?"
+
+[Let them answer — they'll almost always admit the lead sits there.]
+
+"Yeah — that's the most common thing I hear. Most businesses lose 30–40% of inbound leads just because there's no instant response. The customer already moved on to whoever answered first.
+
+What I do is set up an AI system that responds, qualifies, and follows up automatically, 24/7. Takes me about a week to build, then it just runs. I've got a 20-min demo — no commitment, just want to show you what it looks like for a business like yours. What does your week look like?"</div>
+
+  <div class="lbl">Alternate opener — Google reviews angle</div>
+  <div class="script">"Hey [name], this is [your name] — I help local businesses show up higher on Google. I was looking at [Business Name] this morning and had a quick thought. Do you have 60 seconds?
+
+You're at [X] reviews. For a business that's been around as long as yours, that's probably costing you visibility — not because you're doing anything wrong, just because the review ask isn't automated yet. I can usually help businesses triple that number in 90 days. Want to see how it works?"</div>
+
+  <div class="lbl">Objection handling</div>
+  <div class="script">"We already have a website."
+→ "Great — this isn't about replacing it. It's about what happens after someone visits. Are you automatically following up with every form submission?"
+
+"We're not focused on this right now."
+→ "Fair. Can I send you a 2-minute video of what it looks like? No call needed — just something to have when the timing is right."
+
+"How much does it cost?"
+→ "Depends on what you need — I build it to fit. Most clients start around $150–$200/month, usually less than what they're losing from missed leads. Can I show you the math?"
+
+"We already have a marketing person."
+→ "No conflict — this is backend automation, not marketing. It actually makes their work more effective. 10 minutes, want to see?"
+
+"We're doing fine."
+→ "Totally fair. Last question — are you automatically getting Google reviews from customers right now? That's usually the second gap I find."</div>
+</div>
+
+<div class="card">
+  <span class="tlbl">IG / Facebook DM — warm opener</span>
+  <span class="for-client">📣 Send to prospect</span>
+  <div class="script">Hey [name] — came across [Business Name] and genuinely love what you've built. Quick question from someone who works with local businesses on their tech: do you have anything set up to respond to inquiries automatically when you're not around?
+
+Not a pitch — just something I notice a lot of great businesses don't have yet. Happy to show you what it looks like if you're curious.
+
+Either way, keep doing what you're doing — [specific thing you noticed] is great.</div>
+</div>
+
+<div class="card">
+  <span class="tlbl">Cold email — Google reviews (warm version)</span>
+  <span class="for-client">📣 Send to prospect</span>
+  <div class="script">Subject: Quick idea for [Business Name]
+
+Hey [First Name],
+
+I was looking at [Business Name] on Google and noticed you're at [X] reviews. Honestly, for a place that looks as solid as yours, I'd expect way more — which usually just means the ask isn't automated yet.
+
+I help local businesses set up a simple text that goes out to customers right after their visit. Most go from where you are now to 150+ reviews in a few months without doing anything differently.
+
+No pressure — just thought it was worth mentioning. Happy to pull something together if you're curious.
+
+— [Your name]
+[Your business number]</div>
+</div>
+
+<div class="card">
+  <span class="tlbl">Follow-up DM — no reply after 5–7 days</span>
+  <span class="for-client">📣 Send to prospect</span>
+  <div class="script">Hey [name] — just bumping this up in case it got buried. No worries if timing's off.
+
+I put together a quick look at what this would look like for [Business Name] specifically. Happy to send it over, zero commitment. [+ Loom link]</div>
+</div>
+
+<div class="card">
+  <span class="tlbl">Text message — warm direct intro</span>
+  <span class="for-client">📣 Send to prospect</span>
+  <div class="script">Hey [name], this is [your name] — I build AI systems for local businesses. I help places like [Business Name] stop losing leads after hours and get more Google reviews automatically. Open to a quick 15-min call this week?</div>
+</div>
+
+<div class="card">
+  <span class="tlbl">Referral ask — after first happy client</span>
+  <span class="for-client">📣 Send to client</span>
+  <div class="script">Hey [name] — I'm looking to work with a couple more local businesses this month. If you know any business owners who'd find this useful, I'd love an intro. Happy to do a free 15-min audit for anyone you send my way.</div>
+</div>
+
+<div class="card">
+  <span class="tlbl">Re-engagement — cold leads</span>
+  <span class="for-client">📣 Send to cold lead</span>
+  <div class="script">Subject: Still thinking about [Business Name]
+
+Hey [First Name] — I know we talked a while back and timing wasn't right. What I can build has gotten a lot better recently. If you're ever curious what it looks like today, happy to pull something together — no catch.
+
+— [Your name]</div>
+</div>
+</div>
+</div>
+<!-- ═══ S4: CLIENT TEMPLATES ═══ -->
+<div id="s4" class="sec">
+<div class="cpbar"><button class="cpbtn" id="c4" onclick="cp('s4c','c4')">Copy 📋</button></div>
+<div id="s4c">
+<p class="sh">Client templates</p>
+<p class="ss">Onboarding form, contract, launch emails, monthly messages — everything you send a client.</p>
+
+<div class="card">
+  <div class="lbl">Onboarding form — 19 questions (copy into Google Forms)</div>
+  <span class="for-me">🔒 For you — send link after deposit clears</span>
+  <div class="script">BUSINESS BASICS
+1. Business name (exactly as it should appear everywhere)
+2. Owner name
+3. Business phone (customer-facing)
+4. Business email (customer-facing)
+5. Business address
+6. Hours of operation
+
+SERVICES
+7. Top 5 services (with prices if you want them on the site)
+8. Describe your business in 2–3 sentences
+
+BRAND
+9. Brand colors (hex codes or describe: "navy and gold")
+10. Brand vibe: Professional / Warm / Luxury / Fun / Bold / Natural
+11. Do you have a logo? Yes — email PNG/SVG / No — please create one
+
+CHATBOT SETUP (Tier 2+)
+12. Top 3–5 questions customers ask
+13. How should someone book? (link, phone, or both)
+14. Cancellation policy
+15. Anything the chatbot should never say or do?
+
+GOOGLE + SOCIAL
+16. Google Business Profile login email
+17. Instagram handle (if any)
+18. Social links on website? Yes / No
+
+PHOTOS
+19. Do you have photos? Yes — I'll email / Some — I'll send what I have / No — please use stock</div>
+  <div class="tip">💡 19 questions is all you need to build everything without a single follow-up email.</div>
+</div>
+
+<div class="card">
+  <div class="lbl">Contract template — copy into Google Docs, fill brackets, send as PDF</div>
+  <span class="for-client">📣 Send to client + get signed via HelloSign</span>
+  <div class="script" style="font-size:13px;line-height:1.8">SERVICE AGREEMENT
+
+Between: [YOUR NAME / AGENCY NAME] ("Service Provider")
+And: [CLIENT BUSINESS NAME] ("Client")
+Effective: [START DATE]
+
+1. SERVICES
+[TIER NAME — e.g. "Tier 2: Website + AI Chatbot + Review Automation"]
+Deliverables: [List exactly what's included]
+
+2. FEES
+Setup fee: $[AMOUNT] — 50% before work begins, 50% on launch day.
+Monthly retainer: $[AMOUNT]/month, charged on the 1st.
+Changes included: [1 or 2] hour(s) per month.
+Additional changes: $[75–100]/hour, billed monthly.
+
+3. PAYMENT
+Client authorizes recurring monthly charges. Invoices due on receipt.
+Accounts 7+ days past due may result in service suspension.
+
+4. TERM & CANCELLATION
+3-month minimum from launch. After that, 30 days written notice via email.
+No refund for the current billing month on cancellation.
+
+5. OWNERSHIP
+Client owns all content and design upon full payment. Service Provider may display work in portfolio. All systems remain in Client's GHL sub-account upon cancellation.
+
+6. CLIENT RESPONSIBILITIES
+Client provides all info, photos, and approvals within 5 business days of request.
+
+7. LIMITATIONS
+No guarantee of specific lead counts, rankings, or revenue. Not responsible for third-party platform outages.
+
+8. CONFIDENTIALITY
+Both parties keep each other's pricing and systems confidential.
+
+Signed: _________________ Date: _______ (Service Provider)
+Signed: _________________ Date: _______ (Client)</div>
+</div>
+
+<div class="card">
+  <span class="tlbl">Launch day email</span>
+  <span class="for-client">📣 Send to client</span>
+  <div class="script">Subject: [Business Name] is live! 🎉
+
+Hey [First Name] — you're live! Here's everything now running:
+
+✅ Website: [URL]
+✅ AI chatbot — answering 24/7
+✅ Review requests — automated after every visit
+✅ Lead capture + instant auto-response
+✅ GHL Client App — download to see leads on your phone: [LINK]
+
+Let's do a quick 20-min walkthrough: [CALENDAR LINK]
+
+I'll send the final invoice today and set up your recurring billing starting [DATE].
+
+— [Your name] | [Number]</div>
+</div>
+
+<div class="card">
+  <span class="tlbl">"How It Works" 1-pager — send after walkthrough call</span>
+  <span class="for-client">📣 Send to client</span>
+  <div class="script">HOW YOUR AI SYSTEM WORKS — [Business Name]
+
+WHAT'S AUTOMATED (you do nothing):
+• Form submitted → instant reply within 60 seconds
+• Missed call → automatic text back within 2 minutes
+• Customer visits → review request text [X] hours later
+• Chatbot answers FAQs on your site 24/7
+
+WHERE TO SEE EVERYTHING:
+• Download your app: [LINK]
+• All leads, conversations, and reviews in one place on your phone
+• Push notification for every new lead
+
+HOW TO REACH ME FOR CHANGES:
+Text/call: [your number] | Email: [your email]
+Included: [1 or 2] hr/month | Overage: $[75–100]/hr
+
+BILLING: $[AMOUNT]/month auto-charges on the 1st.</div>
+</div>
+
+<div class="card">
+  <span class="tlbl">Monthly results snapshot text (send on the 1st)</span>
+  <span class="for-client">📣 Send to client</span>
+  <div class="script">Hey [name] — quick look at [Month]:
+📥 [X] new leads captured
+⭐ [X] new Google reviews (now at [TOTAL])
+💬 [X] chatbot chats handled
+Everything running smoothly. Anything you'd like adjusted?</div>
+</div>
+
+<div class="card">
+  <span class="tlbl">Tier upgrade pitch (send at 90 days)</span>
+  <span class="for-client">📣 Send to client</span>
+  <div class="script">Subject: An idea for [Business Name] — month 4
+
+Hey [First Name] — three months in and things are running well. Based on your lead volume, I think one thing would make a real difference: [SPECIFIC UPGRADE].
+
+Would add $[X]/month and take me [X] days. Worth a 15-min call? No pressure — just something I noticed.
+
+— [Your name]</div>
+</div>
+
+<div class="card">
+  <span class="tlbl">Video testimonial request (at 90 days)</span>
+  <span class="for-client">📣 Send to client</span>
+  <div class="script">Hey [name] — would you be up for recording a 60-second video just saying what you've noticed since we set things up? Totally casual, on your phone is fine. I'd use it on my website. No pressure — but if you're open to it I'd really appreciate it 🙏</div>
+</div>
+
+<div class="card">
+  <span class="tlbl">Hours exceeded — overage response</span>
+  <span class="for-client">📣 Send to client</span>
+  <div class="script">Hey [name] — happy to make those changes! Quick heads up: we've used the included [1/2] hour for this month, so the additional work runs at $[75–100]/hr. Should be about [X] hours, roughly $[AMOUNT]. Want me to go ahead?</div>
+</div>
+</div>
+</div>
+<!-- ═══ S5: SETUP, STACK & TOOLS ═══ -->
+<div id="s5" class="sec">
+<div class="cpbar"><button class="cpbtn" id="c5" onclick="cp('s5c','c5')">Copy 📋</button></div>
+<div id="s5c">
+<p class="sh">Setup, stack &amp; tools</p>
+<p class="ss">Every tool you need, why, and how much. Monthly cost breakdown included.</p>
+
+<div class="card">
+  <div class="lbl">Your agency name — top picks</div>
+  <div class="tdesc">Based on your world: mountains, Mariposa, rivers, bikes, music, beach. No HB in the name so you can scale anywhere.</div>
+  <div class="row"><div class="rl"><strong>Trailhead Co.</strong><small>Every great journey starts at a trailhead. Bikes, mountains, California trails, and a perfect metaphor for onboarding businesses into automation. trailheadco.co</small></div></div>
+  <div class="row"><div class="rl"><strong>Rhythm &amp; Root</strong><small>Music + where you come from + stability your systems provide. Warm, real, distinct. rhythmandroot.co</small></div></div>
+  <div class="row"><div class="rl"><strong>Sage &amp; Signal</strong><small>Sage = California mountains + wisdom. Signal = automation + communication. sageandsignal.co</small></div></div>
+  <div class="row"><div class="rl"><strong>Peak &amp; Pine</strong><small>Mountain + California tree. Alliterative, two syllables each, impossible to mishear on a cold call. peakandpine.co</small></div></div>
+  <div class="row"><div class="rl"><strong>Cadence Co.</strong><small>Music term + cycling cadence + the steady rhythm of your automations. Three layers in one word. cadenceco.co</small></div></div>
+  <div class="tip">💡 Once you pick a name, check domain availability at namecheap.com before announcing anything.</div>
+</div>
+
+<div class="card">
+  <div class="lbl">Domain + Google Workspace setup</div>
+  <div class="step"><div class="sn">1</div><div class="st"><strong>Buy your domain at Namecheap (~$10–$15/yr)</strong><span>Search [yourname].co — grab it the same day you pick your business name.</span></div></div>
+  <div class="step"><div class="sn">2</div><div class="st"><strong>Sign up for Google Workspace Business Starter at $6/mo</strong><span>workspace.google.com — gives you yourname@[yourdomain].co email, Drive (30GB), Meet, Docs, Calendar.</span></div></div>
+  <div class="step"><div class="sn">3</div><div class="st"><strong>Connect your domain to Google Workspace (15 min)</strong><span>Google walks you through DNS updates on Namecheap. Up to 24 hrs to propagate.</span></div></div>
+  <div class="step"><div class="sn">4</div><div class="st"><strong>Set up your professional email and Gmail signature</strong><span>yourname@[agency].co — name, title ("Founder — [Agency Name]"), phone, website. Goes on everything.</span></div></div>
+</div>
+
+<div class="card">
+  <div class="lbl">Business phone — don't use your personal number</div>
+  <div class="row"><div class="rl"><strong>Google Voice (recommended to start)</strong><small>Free. Separate number that rings your iPhone. Calls, texts, voicemail. Pick a 714/949 area code.</small></div><div class="price">Free</div></div>
+  <div class="row"><div class="rl"><strong>OpenPhone (upgrade when ready)</strong><small>$15/mo. Native iPhone app, contact notes, shared inbox if you ever scale.</small></div><div class="price">$15/mo<span class="trial">Free trial</span></div></div>
+  <div class="warn">⚠️ Once a prospect or client has your personal number, that boundary is gone forever. Set up Google Voice before your first outreach call.</div>
+</div>
+
+<div class="card">
+  <div class="lbl">Demo + calendar tools</div>
+  <div class="row"><div class="rl"><strong>Loom (loom.com)</strong><small>Free — record 90-second screen shares for cold outreach follow-ups. A Loom link in a DM converts 3x better than text.</small></div><div class="price">Free</div></div>
+  <div class="row"><div class="rl"><strong>Calendly (calendly.com)</strong><small>Free — booking link prospects tap to schedule calls. Connects to Google Calendar. Put it in every DM.</small></div><div class="price">Free</div></div>
+</div>
+
+<div class="card">
+  <div class="lbl">Your core software stack</div>
+  <div class="row"><div class="rl"><strong>GoHighLevel Starter</strong><small>Your entire client backend: CRM, website builder, AI Studio, chatbot, SMS/email automations, review requests, pipelines, white-label client app.</small></div><div class="price">$97/mo<span class="trial">14-day trial</span></div></div>
+  <div class="row"><div class="rl"><strong>GoHighLevel Unlimited</strong><small>Upgrade at client #3. Unlimited sub-accounts — one for each client.</small></div><div class="price">$297/mo</div></div>
+  <div class="row"><div class="rl"><strong>Claude Pro</strong><small>Already here. Write proposals, build automation flows, draft client copy, debug GHL, generate contracts.</small></div><div class="price">$20/mo<span class="trial">✓ Here</span></div></div>
+  <div class="row"><div class="rl"><strong>Make.com</strong><small>Only if a client needs a weird third-party integration GHL can't handle. Skip for now.</small></div><div class="price">$0 (skip)</div></div>
+</div>
+
+<div class="card">
+  <div class="lbl">Contract + laptop</div>
+  <div class="row"><div class="rl"><strong>HelloSign (now Dropbox Sign)</strong><small>Free for 3 docs/month. Client gets email, taps "sign," done. Use for every contract.</small></div><div class="price">Free</div></div>
+  <div class="row"><div class="rl"><strong>Agency only (no Ableton)</strong><small>14" MacBook Pro, base M5, 24GB RAM, 1TB SSD.</small></div><div class="price">~$1,751</div></div>
+  <div class="row"><div class="rl"><strong>Agency + Ableton</strong><small>14" MacBook Pro, M5 Pro, 24GB RAM, 1TB SSD. Active cooling, doubled GPU cores.</small></div><div class="price">~$1,949</div></div>
+  <div class="tip">💡 Buy through Relay business account for a clean Section 179 tax deduction. Save the receipt same day.</div>
+</div>
+
+<div class="card">
+  <div class="lbl">Monthly cost breakdown — everything</div>
+  <div class="row"><div class="rl"><strong>GoHighLevel Starter</strong></div><div class="price">$97</div></div>
+  <div class="row"><div class="rl"><strong>Claude Pro</strong></div><div class="price">$20</div></div>
+  <div class="row"><div class="rl"><strong>Google Workspace ($6 plan)</strong></div><div class="price">$6</div></div>
+  <div class="row"><div class="rl"><strong>Domain (Namecheap ~$12/yr)</strong></div><div class="price">$1</div></div>
+  <div class="row"><div class="rl"><strong>Google Voice / Loom / Calendly / HelloSign / Zoho / Wave / Relay</strong></div><div class="price">Free</div></div>
+  <div class="row"><div class="rl"><strong>Stripe</strong><small>2.9% + $0.30 per transaction</small></div><div class="price">Pay per use</div></div>
+  <div class="tot-row"><span class="tot-l">Month 1 total</span><span class="tot-p">$124/mo</span></div>
+  <div class="row" style="padding-top:8px;border-top:none;border-bottom:none"><div class="rl"><small>After client #3 — upgrade GHL to Unlimited</small></div><div class="price" style="color:var(--tx3)">$324/mo</div></div>
+  <div class="tip">One Tier 1 retainer at $150/mo covers the entire Month 1 stack.</div>
+</div>
+
+<div class="card">
+  <div class="lbl">Social media for your agency</div>
+  <div class="step"><div class="sn">1</div><div class="st"><strong>Instagram business account @[agencyname]</strong><span>Post GHL demo screenshots, client wins (with permission), tips for local businesses.</span></div></div>
+  <div class="step"><div class="sn">2</div><div class="st"><strong>Facebook business page</strong><span>Many HB owners are more active on Facebook than Instagram.</span></div></div>
+  <div class="step"><div class="sn">3</div><div class="st"><strong>Google Business Profile (business.google.com) — free</strong><span>What shows up when someone Googles your agency. Fill in every field: name, phone, website, hours, logo. Critical for credibility.</span></div></div>
+  <div class="step"><div class="sn">4</div><div class="st"><strong>Update LinkedIn to show agency founder role</strong><span>Many owners check LinkedIn before replying to a cold email. Matching presence closes the trust gap.</span></div></div>
+</div>
+</div>
+</div>
+<!-- ═══ S6: YOUR AGENCY WEBSITE ═══ -->
+<div id="s6" class="sec">
+<div class="cpbar"><button class="cpbtn" id="c6" onclick="cp('s6c','c6')">Copy 📋</button></div>
+<div id="s6c">
+<p class="sh">Your agency website</p>
+<p class="ss">When to build it, what to put on it, and how to build it in GHL so it doubles as a live demo.</p>
+
+<div class="card">
+  <span class="for-me">🔒 When to build it</span>
+  <div class="tdesc" style="margin-bottom:0">Don't build it before your first client — you'll spend time on it instead of outreach, and you have no proof yet. Build it alongside your first client: you'll learn GHL better, and you'll have a real build to screenshot. Target: website live by Client #2.</div>
+</div>
+
+<div class="card">
+  <div class="lbl">Why build it in GHL (not Framer or Squarespace)</div>
+  <div class="tdesc">Your agency website built in GHL IS your demo. When a prospect asks "can you show me what you'd build?", you say "you're looking at it right now." Every chatbot and form on your site is proof of concept built with the exact same tools you use for clients.</div>
+  <div class="tip">💡 Create a sub-account named "[Your Agency Name] — Website" in GHL. Keeps it clean and separate from client accounts.</div>
+</div>
+
+<div class="card">
+  <div class="lbl">Exact page structure — what to build</div>
+  <div class="sec-lbl">Section 1 — Hero</div>
+  <div class="script">Headline: "We help local businesses stop losing leads after hours."
+Sub: "AI-powered websites, chatbots, and Google review automation — built and managed for you."
+Button: "See a 2-min demo →" (Loom link)
+Button 2: "Book a free 20-min call" (Calendly)</div>
+
+  <div class="sec-lbl">Section 2 — The problem</div>
+  <div class="script">Header: "Right now, while you're reading this..."
+• Someone just filled out your contact form and won't hear back until tomorrow morning.
+• A customer who would have left a 5-star review just forgot to.
+• A missed call just went to your voicemail — they called the next guy.
+
+[These happen every single day. We fix all three.]</div>
+
+  <div class="sec-lbl">Section 3 — What we do (3 cards)</div>
+  <div class="script">Tier 1, 2, 3 — each with name, 2-sentence description, starting price, and "Book a call" button.
+Show prices. Local owners respect transparency. Hidden pricing wastes your time with unqualified calls.</div>
+
+  <div class="sec-lbl">Section 4 — How it works (3 steps)</div>
+  <div class="script">Step 1: "We build it in about a week" — custom, we handle everything.
+Step 2: "It runs automatically" — leads captured, reviews requested, follow-ups sent.
+Step 3: "You get a monthly snapshot" — see what it did, nothing to manage.</div>
+
+  <div class="sec-lbl">Section 5 — Proof</div>
+  <div class="script">• 2–3 client results (anonymized is fine): "A HB med spa went from 34 to 127 Google reviews in 90 days."
+• Screenshots of GHL setups, chatbot convos, review texts
+• 1 Loom walkthrough of a live system
+• 1 client testimonial — even one quote beats all screenshots combined</div>
+
+  <div class="sec-lbl">Section 6 — About (very short)</div>
+  <div class="script">"I'm [name], a Huntington Beach-based AI automation builder. I started [Agency Name] because I kept seeing local businesses lose customers to slow response times and not enough Google reviews — problems that are 100% fixable. Every client gets a custom setup built in about a week and managed month to month."</div>
+
+  <div class="sec-lbl">Section 7 — Bottom CTA</div>
+  <div class="script">Header: "Ready to stop losing leads after hours?"
+Sub: "Book a free 20-minute call. I'll show you exactly what your system would look like."
+Button: "Book a free call" → Calendly</div>
+</div>
+
+<div class="card">
+  <div class="lbl">Website build checklist (in GHL)</div>
+  <div class="step"><div class="sn">1</div><div class="st"><strong>Create agency sub-account in GHL</strong><span>Name it "[Agency Name] — Website." Use your agency branding.</span></div></div>
+  <div class="step"><div class="sn">2</div><div class="st"><strong>Use GHL AI Studio to generate a base layout</strong><span>Prompt: "Create a website for a local AI automation agency. Clean, modern. Include hero, services, how it works, social proof, about, CTA."</span></div></div>
+  <div class="step"><div class="sn">3</div><div class="st"><strong>Customize with your brand colors, logo, and the copy above</strong></div></div>
+  <div class="step"><div class="sn">4</div><div class="st"><strong>Add live contact form with auto-reply</strong><span>Every visitor who fills it out gets a reply within 60 seconds. Test it yourself first.</span></div></div>
+  <div class="step"><div class="sn">5</div><div class="st"><strong>Add chatbot to your own site</strong><span>Train it on your services, pricing, and FAQ. Prospects interact with it = they immediately understand what you build.</span></div></div>
+  <div class="step"><div class="sn">6</div><div class="st"><strong>Embed Calendly in hero AND bottom CTA</strong><span>Every page needs a frictionless path to booking.</span></div></div>
+  <div class="step"><div class="sn">7</div><div class="st"><strong>Connect custom domain and SSL (free in GHL)</strong><span>GHL → Sub-account Settings → Domains → Add domain. Point Namecheap DNS to GHL.</span></div></div>
+  <div class="step"><div class="sn">8</div><div class="st"><strong>Test on iPhone before going live</strong><span>70%+ of prospects look you up on mobile first.</span></div></div>
+  <div class="step"><div class="sn">9</div><div class="st"><strong>Add website URL to email signature, Google Business Profile, Instagram, Facebook</strong></div></div>
+</div>
+
+<div class="card">
+  <div class="lbl">What NOT to put on your website</div>
+  <div class="danger">❌ Long "About" section — nobody reads it on first visit
+❌ Generic stock photo hero — use a real screenshot of something you built
+❌ "We specialize in digital transformation" — meaningless to a local business owner
+❌ A contact form with no auto-response — practice what you preach
+❌ Pricing hidden behind "contact us" — just show the starting price</div>
+</div>
+</div>
+</div>
+<!-- ═══ S7: MONEY, BANKING & GETTING PAID ═══ -->
+<div id="s7" class="sec">
+<div class="cpbar"><button class="cpbtn" id="c7" onclick="cp('s7c','c7')">Copy 📋</button></div>
+<div id="s7c">
+<p class="sh">Money, banking &amp; getting paid</p>
+<p class="ss">How money flows from client → your bank → your pocket. All free tools.</p>
+
+<div class="card">
+  <div class="lbl">The money flow — overview</div>
+  <div class="script">Client pays invoice → Stripe processes → lands in Relay Income account
+   ↓ (instant auto-transfer rule)
+35% → Tax Reserve sub-account (untouchable until quarterly taxes)
+65% → Operating account (stack costs, business purchases)
+   ↓ (whenever you want)
+Owner's Draw → transfer from Operating to personal Wells Fargo
+Then spend personal money from Wells Fargo as normal</div>
+  <div class="warn">⚠️ Never buy personal items from the Relay account. Groceries, personal subscriptions, anything non-business — do an Owner's Draw to Wells Fargo first, then spend from there. Keeps the business account 100% clean.</div>
+</div>
+
+<div class="card">
+  <div class="lbl">Open and set up Relay (relay.fi)</div>
+  <div class="step"><div class="sn">1</div><div class="st"><strong>Open free Relay account at relay.fi</strong><span>Free, no minimum balance, no monthly fee. Keep Wells Fargo 100% personal — Relay is your business account.</span></div></div>
+  <div class="step"><div class="sn">2</div><div class="st"><strong>Create 3 sub-accounts: Income, Tax Reserve, Operating</strong><span>Each gets its own routing number. Free and instant inside Relay.</span></div></div>
+  <div class="step"><div class="sn">3</div><div class="st"><strong>Set up auto-transfer rule: 35% of Income → Tax Reserve, instantly</strong><span>Move Money → Auto-transfer rules → Profit First template → set Tax Reserve to 35% → Instant → Save.</span></div></div>
+  <div class="step"><div class="sn">4</div><div class="st"><strong>Transfer seed money from Wells Fargo to Relay Operating ($500–$1,000)</strong><span>Label it "Owner's Contribution" in Wave. Not taxable income.</span></div></div>
+  <div class="step"><div class="sn">5</div><div class="st"><strong>Connect Stripe to pay out directly to Relay Income</strong><span>Client payments never touch Wells Fargo from this point forward.</span></div></div>
+</div>
+
+<div class="card">
+  <div class="lbl">Collect payments — Stripe + Zoho Invoice</div>
+  <div class="step"><div class="sn">1</div><div class="st"><strong>Set up Stripe (stripe.com) — free</strong><span>Connect Relay business account as payout destination. 2.9% + $0.30 per card transaction. No monthly fee.</span></div></div>
+  <div class="step"><div class="sn">2</div><div class="st"><strong>Set up Zoho Invoice (zoho.com/invoice) — free</strong><span>Connect Stripe. Set up recurring monthly invoices — auto-charges on the 1st so you never chase anyone.</span></div></div>
+  <div class="step"><div class="sn">3</div><div class="st"><strong>Always take 50% upfront before starting any work</strong><span>50% deposit when contract is signed. 50% on launch day before handing over access.</span></div></div>
+  <div class="step"><div class="sn">4</div><div class="st"><strong>Offer ACH for setup fees over $500</strong><span>Bank transfer via Stripe — only 0.8% capped at $5. Much cheaper than card for large amounts.</span></div></div>
+</div>
+
+<div class="card">
+  <div class="lbl">Track money — Wave (waveapps.com) — free</div>
+  <div class="step"><div class="sn">1</div><div class="st"><strong>Create free Wave account and connect Relay business checking</strong><span>Auto-syncs transactions. Bookkeeping essentially does itself.</span></div></div>
+  <div class="step"><div class="sn">2</div><div class="st"><strong>Tag every software subscription as "Software — Business"</strong><span>GHL, Claude, Google Workspace, domain — all deductible. Do it monthly, not at tax time.</span></div></div>
+  <div class="step"><div class="sn">3</div><div class="st"><strong>Label Owner's Contributions and Owner's Draws correctly</strong><span>Money IN from Wells Fargo = "Owner's Contribution." Money OUT to Wells Fargo = "Owner's Draw." Neither is taxable income.</span></div></div>
+  <div class="step"><div class="sn">4</div><div class="st"><strong>Run a P&amp;L report monthly</strong><span>Wave → Reports → Profit &amp; Loss. 30 seconds. Shows real revenue minus real expenses.</span></div></div>
+  <div class="warn">⚠️ Don't use Wave's own payment processing — reported fund-hold issues. Stripe for collecting money, Wave for bookkeeping only.</div>
+</div>
+</div>
+</div>
+<!-- ═══ S8: TAXES ═══ -->
+<div id="s8" class="sec">
+<div class="cpbar"><button class="cpbtn" id="c8" onclick="cp('s8c','c8')">Copy 📋</button></div>
+<div id="s8c">
+<p class="sh">Taxes — freelance / sole proprietor</p>
+<p class="ss">You're W-2 at Mariners + sole proprietor for the agency. Here's exactly what that means. No LLC needed — same deductions, less paperwork, no $800 CA franchise tax.</p>
+
+<div class="card">
+  <div class="lbl">Why staying freelance is smarter right now</div>
+  <div class="tdesc" style="margin-bottom:0">An LLC does NOT lower your taxes — the deductions are identical either way. What an LLC gives you is liability protection, which matters when you have real assets at risk. Right now your biggest risk is a client complaint over a website — low-stakes. A California LLC costs $800/year minimum whether you make money or not. Stay sole proprietor until you're clearing $3k+/month consistently, then revisit with a CPA.</div>
+</div>
+
+<div class="card">
+  <div class="lbl">The two taxes you'll owe on freelance income</div>
+  <div class="row"><div class="rl"><strong>Self-employment tax (federal)</strong><small>15.3% of net freelance income. Covers Social Security + Medicare — both halves since you're your own employer.</small></div><div class="price" style="color:var(--rd-tx)">15.3%</div></div>
+  <div class="row"><div class="rl"><strong>California state income tax</strong><small>Stacks on your Mariners salary. Up to 9.3% at your income bracket.</small></div><div class="price" style="color:var(--am-tx)">Up to 9.3%</div></div>
+  <div class="row"><div class="rl"><strong>Federal income tax</strong><small>Combined Mariners + agency income. Likely 22–24% bracket.</small></div><div class="price" style="color:var(--am-tx)">22–24%</div></div>
+  <div class="tip">💡 Set aside 35% of every payment the moment it hits Relay. The auto-transfer rule handles this automatically.</div>
+</div>
+
+<div class="card">
+  <div class="lbl">Quarterly payment dates — add all four to your calendar now</div>
+  <div class="row"><div class="rl"><strong>Q1 — April 15</strong><small>Covers Jan 1 – Mar 31. IRS: irs.gov/payments + CA FTB: ftb.ca.gov</small></div><div class="price badge b-rd">Set reminder</div></div>
+  <div class="row"><div class="rl"><strong>Q2 — June 15</strong><small>Covers Apr 1 – May 31.</small></div><div class="price badge b-rd">Set reminder</div></div>
+  <div class="row"><div class="rl"><strong>Q3 — September 15</strong><small>Covers Jun 1 – Aug 31.</small></div><div class="price badge b-rd">Set reminder</div></div>
+  <div class="row"><div class="rl"><strong>Q4 — January 15</strong><small>Covers Sep 1 – Dec 31.</small></div><div class="price badge b-rd">Set reminder</div></div>
+  <div class="warn">⚠️ California's schedule is weird — 30% in Q1, 40% in Q2, 0% in Q3, 30% in Q4. Not four equal chunks like federal.</div>
+</div>
+
+<div class="card">
+  <div class="lbl">What you can deduct — every dollar lowers your tax bill</div>
+  <div class="sec-lbl">Software (100% deductible)</div>
+  <div class="row"><div class="rl">GoHighLevel</div><div class="price" style="color:var(--gr-tx)">$1,164–$3,564/yr</div></div>
+  <div class="row"><div class="rl">Claude Pro</div><div class="price" style="color:var(--gr-tx)">$240/yr</div></div>
+  <div class="row"><div class="rl">Google Workspace</div><div class="price" style="color:var(--gr-tx)">$72/yr</div></div>
+  <div class="row"><div class="rl">Domain (Namecheap)</div><div class="price" style="color:var(--gr-tx)">~$12/yr</div></div>
+  <div class="row"><div class="rl">OpenPhone (if upgraded)</div><div class="price" style="color:var(--gr-tx)">$180/yr</div></div>
+  <div class="sec-lbl">Phone &amp; internet (% of business use)</div>
+  <div class="row"><div class="rl">Cell phone bill</div><div class="price" style="color:var(--tx3)">50–80%</div></div>
+  <div class="row"><div class="rl">Home internet</div><div class="price" style="color:var(--tx3)">30–50%</div></div>
+  <div class="sec-lbl">Home office</div>
+  <div class="row"><div class="rl">Simplified method: $5/sq ft up to 300 sq ft</div><div class="price" style="color:var(--gr-tx)">Up to $1,500/yr</div></div>
+  <div class="sec-lbl">Other</div>
+  <div class="row"><div class="rl">Laptop (Section 179 — full cost year of purchase)</div><div class="price" style="color:var(--gr-tx)">$1,751–$1,999</div></div>
+  <div class="row"><div class="rl">Client coffee meetings</div><div class="price" style="color:var(--gr-tx)">50% deductible</div></div>
+  <div class="row"><div class="rl">Business books, courses, training</div><div class="price" style="color:var(--gr-tx)">100% deductible</div></div>
+  <div class="row"><div class="rl">Self-employment tax deduction</div><div class="price" style="color:var(--tx3)">Deduct half of SE tax</div></div>
+  <div class="tip">💡 File all of this on Schedule C attached to your regular 1040. One extra form. Nothing complicated.</div>
+</div>
+
+<div class="card">
+  <div class="lbl">Tax setup — one-time to-do list</div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Open Tax Reserve sub-account in Relay</strong><span>Covered in banking setup — just confirm it's done.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Confirm 35% auto-transfer rule is running in Relay</strong><span>Test it by making a small deposit and watching it split automatically.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Set up Wave and connect Relay business checking</strong><span>Transactions auto-import. Tag categories as they come in.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Measure your home office square footage</strong><span>Dedicated workspace only. Simplified method: sq ft × $5, up to 300 sq ft.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Add all 4 quarterly dates to iPhone calendar with 1-week reminders</strong><span>Apr 15, Jun 15, Sep 15, Jan 15.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Book one CPA consult ($150–$300)</strong><span>Your dual-income situation (Mariners W-2 + agency) deserves one professional review. Look for OC-based CPAs specializing in self-employed dual-income.</span></div></div>
+</div>
+</div>
+</div>
+<!-- ═══ S9: MASTER START-UP CHECKLIST ═══ -->
+<div id="s9" class="sec">
+<div class="cpbar"><button class="cpbtn" id="c9" onclick="cp('s9c','c9')">Copy 📋</button></div>
+<div id="s9c">
+<p class="sh">Master start-up checklist</p>
+<p class="ss">Everything in order. Do this once. The sequence matters — earlier items unlock later ones.</p>
+
+<div class="card">
+  <div class="sec-lbl">Phase 1 — Name &amp; identity (Day 1)</div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Pick your agency name from the shortlist</strong><span>Top 5: Trailhead Co., Rhythm &amp; Root, Sage &amp; Signal, Peak &amp; Pine, Cadence Co. Check domain at namecheap.com first.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Buy your .co domain at Namecheap (~$10–$15/yr)</strong><span>Get it the day you decide. Don't wait.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Sign up for Google Workspace Business Starter at $6/mo</strong><span>workspace.google.com — gives you yourname@[yourdomain].co</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Connect your domain to Google Workspace (15 min)</strong><span>Google walks you through DNS updates on Namecheap. Up to 24 hrs to propagate.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Set up professional email and Gmail signature</strong><span>yourname@[agency].co — name, title, phone, website. Goes on everything.</span></div></div>
+
+  <div class="sec-lbl">Phase 2 — Phone &amp; communication (Day 1–2)</div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Set up Google Voice (voice.google.com) — free</strong><span>Pick a 714 or 949 area code. Business number for all outreach before you spend a dime.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Set up Calendly free (calendly.com)</strong><span>Connect to Google Calendar. Create "20-Minute Demo Call" event type. Get your booking link.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Set up Loom free (loom.com)</strong><span>Record 90-second demo videos for cold outreach follow-ups.</span></div></div>
+
+  <div class="sec-lbl">Phase 3 — Banking &amp; money (Day 2–3)</div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Open free Relay account (relay.fi)</strong><span>Your business bank. Wells Fargo stays 100% personal.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Create 3 Relay sub-accounts: Income, Tax Reserve, Operating</strong><span>Each gets its own routing number — free and instant inside Relay.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Set up auto-transfer: 35% to Tax Reserve, Instant</strong><span>Move Money → Auto-transfer rules → Profit First → 35% Tax Reserve → Instant → Save.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Transfer seed money from Wells Fargo to Relay Operating ($500–$1,000)</strong><span>Label "Owner's Contribution" in Wave. Covers first months of stack.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Set up Stripe (stripe.com) — connect Relay Income as payout</strong><span>Processes all client card payments.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Set up Zoho Invoice (zoho.com/invoice) — connect Stripe</strong><span>Create your invoice template. Set up recurring auto-charges for retainers.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Set up Wave (waveapps.com) — connect Relay account</strong><span>Tag all software as "Software — Business." Bookkeeping starts now.</span></div></div>
+
+  <div class="sec-lbl">Phase 4 — Core tools (Day 3–5)</div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Sign up for GoHighLevel Starter at $97/mo (14-day free trial)</strong><span>gohighlevel.com — your entire client backend lives here.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Watch GHL onboarding videos (1–2 hours)</strong><span>Learn: sub-accounts, pipelines, automations, AI Studio, mobile app setup.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Build a demo account in GHL ("HB Demo Spa")</strong><span>Full Tier 2 setup. This becomes your demo video and proof of concept. Take screenshots.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Record 2-min Loom of your demo account</strong><span>Walkthrough of chatbot, review text, and client app. Goes in every DM follow-up.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Set up HelloSign (hellosign.com) — free (3 docs/month)</strong><span>For e-signatures on contracts. Test it by signing the template yourself.</span></div></div>
+
+  <div class="sec-lbl">Phase 5 — Legal &amp; contracts (Day 5–7)</div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Copy contract template from Client Templates tab into Google Docs</strong><span>Fill in your name and agency name. Save as master — duplicate for each client.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Copy onboarding form questions into a Google Form</strong><span>19 questions, takes 15 min. Share the link after deposit clears. Test it first.</span></div></div>
+
+  <div class="sec-lbl">Phase 6 — Online presence (Week 2)</div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Create Instagram business account @[agencyname]</strong><span>Post GHL demo screenshots, client wins, tips. Your proof wall.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Create Facebook business page</strong><span>Many HB owners are more active on Facebook.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Claim Google Business Profile (business.google.com) — free</strong><span>Fill in every field: name, phone, website, hours, services, logo. Critical for credibility.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Update LinkedIn to show agency founder role</strong><span>Many owners check LinkedIn before replying to a cold email.</span></div></div>
+
+  <div class="sec-lbl">Phase 7 — Your website (Alongside Client #1)</div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Build agency website in GHL using the structure in the Website tab</strong><span>Don't build before your first client — build alongside them so you have real work to show.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Connect domain to GHL website</strong><span>GHL → Settings → Domains → Add. Point Namecheap DNS to GHL's servers.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Add chatbot to your own agency website</strong><span>Your site's chatbot IS your demo. Prospects interact with it and immediately get it.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Embed Calendly in hero AND bottom CTA of website</strong><span>Every visit should have a frictionless path to booking a call.</span></div></div>
+
+  <div class="sec-lbl">Phase 8 — Tax setup (Week 1)</div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Measure your home office square footage</strong><span>Dedicated workspace only. $5/sq ft up to 300 sq ft = max $1,500/yr deduction.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Set quarterly tax reminders in iPhone calendar</strong><span>Apr 15, Jun 15, Sep 15, Jan 15 — with a 1-week "prepare" reminder before each.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Book a one-time CPA consult</strong><span>Your dual W-2 + freelance situation deserves one professional review. $150–$300 one-time.</span></div></div>
+
+  <div class="sec-lbl">Phase 9 — Laptop purchase (When ready)</div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Decide config: base M5 (~$1,751) vs M5 Pro for Ableton (~$1,949)</strong><span>See Setup tab for full comparison. Check current pricing on Amazon and B&amp;H before buying.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Buy using Relay business debit card</strong><span>Clean paper trail for Section 179 deduction. Save order confirmation in Google Drive "Tax Deductions" folder.</span></div></div>
+  <div class="tax-item"><div class="tcb" onclick="ttck(this)"></div><div class="ti"><strong>Log laptop in Wave as "Equipment" same day</strong><span>Don't wait until tax season.</span></div></div>
+</div>
+
+<div class="card" style="margin-top:4px">
+  <div class="lbl">You're operational when all of this is done</div>
+  <div class="row"><div class="rl"><strong>Month 1 total cost</strong><small>GHL Starter + Claude + Google Workspace + domain</small></div><div class="price" style="color:var(--gr-tx)">$124/mo</div></div>
+  <div class="row"><div class="rl"><strong>Revenue to break even</strong><small>1 Tier 1 retainer client</small></div><div class="price" style="color:var(--gr-tx)">$150/mo</div></div>
+  <div class="row"><div class="rl"><strong>Revenue at 3 Tier 2 clients</strong><small>3 × $250/mo retainer</small></div><div class="price" style="color:var(--gr-tx)">$750/mo</div></div>
+  <div class="row"><div class="rl"><strong>Profit at 3 clients</strong><small>$750 − $324 stack (after GHL upgrade)</small></div><div class="price" style="color:var(--gr-tx)">~$426/mo net</div></div>
+  <div class="tip">🏄 That's recurring monthly revenue before setup fees. 3 retainer clients puts you at $400+ net on top of your Mariners salary — and it grows from there.</div>
+</div>
+</div>
+</div>
+<script>
+// ── FIREBASE CONFIG ────────────────────────────────────────────────
+// ⚠️  Replace ALL values below with your own from Firebase Console
+const firebaseConfig = {
+  apiKey: "AIzaSyC9PAzHRNh_S1B2LJmwE1AeGHk4CQyp9Zo",
+  authDomain: "agency-playbook-10cf7.firebaseapp.com",
+  projectId: "agency-playbook-10cf7",
+  storageBucket: "agency-playbook-10cf7.firebasestorage.app",
+  messagingSenderId: "203578458016",
+  appId: "1:203578458016:web:c5f60accafd4513920eec5"
+};
+
+// Initialize Firebase safely (prevents re-initialization errors)
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig); // <-- Fixed to lowercase matching your object above
+}
+
+const db  = firebase.firestore();
+const DOC = db.collection('playbook').doc('troy');
+
+// ── STATE ──────────────────────────────────────────────────────────
+const phaseCounts = [5,4,6,8,6,6];
+let checks      = Array(phaseCounts.reduce((a,b)=>a+b,0)).fill(false);
+let taxChecks   = {};
+let editContent = {};
+let saveTimer   = null;
+let initialLoad = true;
+
+// ── SYNC STATUS ────────────────────────────────────────────────────
+function setSyncStatus(s){
+  const el=document.getElementById('sync-status');
+  const map={synced:['✓ Synced','sy-gr'],saving:['↑ Saving…','sy-am'],
+             offline:['✗ Offline','sy-rd'],loading:['↓ Loading…','sy-bl']};
+  el.className=map[s][1];el.textContent=map[s][0];
+}
+
+// ── APPLY STATE TO DOM ─────────────────────────────────────────────
+function applyChecks(){
+  document.querySelectorAll('.cl-box').forEach((box,i)=>{
+    box.dataset.idx=i;
+    box.classList.toggle('done',!!checks[i]);
+  });
+}
+function applyTaxChecks(){
+  document.querySelectorAll('.tcb').forEach((box,i)=>{
+    box.dataset.tidx=i;
+    box.classList.toggle('done',!!taxChecks[i]);
+  });
+}
+function applyContent(safe){
+  const active=document.activeElement;
+  document.querySelectorAll('[data-eid]').forEach(el=>{
+    if(safe&&el===active)return;
+    const v=editContent[el.dataset.eid];
+    if(v!==undefined)el.innerText=v;
+  });
+}
+function updateAllPhases(){for(let p=0;p<phaseCounts.length;p++)updatePhase(p);}
+
+// ── FIREBASE SAVE ──────────────────────────────────────────────────
+function saveToFirebase(data){
+  setSyncStatus('saving');
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    DOC.set(data,{merge:true})
+      .then(()=>setSyncStatus('synced'))
+      .catch(()=>setSyncStatus('offline'));
+  },800);
+}
+
+// Real-time listener — fires immediately and on every remote change
+DOC.onSnapshot(snap=>{
+  if(snap.exists){
+    const d=snap.data();
+    if(d.checks)    checks=d.checks;
+    if(d.taxChecks) taxChecks=d.taxChecks;
+    if(d.content)   editContent=d.content;
+  }
+  applyChecks();
+  applyTaxChecks();
+  applyContent(!initialLoad);
+  updateAllPhases();
+  updateOv();
+  if(initialLoad)initialLoad=false;
+  setSyncStatus('synced');
+},()=>setSyncStatus('offline'));
+
+// ── NAV ────────────────────────────────────────────────────────────
+function show(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nbtn').forEach(b=>{b.classList.remove('active');b.querySelector('.arr').textContent='▶';});
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');btn.querySelector('.arr').textContent='▼';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── PHASE ACCORDION ────────────────────────────────────────────────
+function tph(hdr){
+  const body=hdr.nextElementSibling,ch=hdr.querySelector('.phase-ch');
+  const open=body.classList.contains('open');
+  body.classList.toggle('open',!open);hdr.classList.toggle('open',!open);ch.classList.toggle('open',!open);
+}
+
+// ── JOURNEY CHECKLIST ──────────────────────────────────────────────
+function tck(box,phase){
+  const i=parseInt(box.dataset.idx);
+  checks[i]=!checks[i];
+  box.classList.toggle('done',checks[i]);
+  updateOv();updatePhase(phase);
+  saveToFirebase({checks:[...checks]});
+}
+function updateOv(){
+  const total=checks.length,done=checks.filter(Boolean).length;
+  const pct=Math.round(done/total*100);
+  document.getElementById('ov-pct').textContent=pct+'%';
+  document.getElementById('ov-fill').style.width=pct+'%';
+  document.getElementById('ov-lbl').textContent=done+' of '+total+' steps complete';
+}
+function updatePhase(phase){
+  const boxes=document.querySelectorAll(`[data-phase="${phase}"] .cl-box`);
+  const total=boxes.length,done=[...boxes].filter(b=>b.classList.contains('done')).length;
+  const pct=Math.round(done/total*100);
+  document.getElementById('pst-'+phase).textContent=done+'/'+total;
+  document.getElementById('pf-'+phase).style.width=pct+'%';
+  document.getElementById('pl-'+phase).textContent=done+' of '+total+' complete';
+}
+
+// ── SETUP / TAX CHECKBOXES ─────────────────────────────────────────
+function ttck(box){
+  const i=parseInt(box.dataset.tidx);
+  taxChecks[i]=!box.classList.contains('done');
+  box.classList.toggle('done');
+  saveToFirebase({taxChecks:{...taxChecks}});
+}
+
+// ── COPY ───────────────────────────────────────────────────────────
+function cp(id,btnId){
+  const el=document.getElementById(id),btn=document.getElementById(btnId);
+  if(!el||!btn)return;
+  const text=el.innerText.trim();
+  const done=()=>{btn.textContent='Copied! ✓';setTimeout(()=>btn.textContent='Copy 📋',2500);};
+  const fb=()=>{const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done();};
+  navigator.clipboard?navigator.clipboard.writeText(text).then(done).catch(fb):fb();
+}
+
+// ── CONTENTEDITABLE SETUP ──────────────────────────────────────────
+// Tap any .script block to edit inline — auto-saves to Firebase on blur
+(function setupEditable(){
+  document.querySelectorAll('.script').forEach((el,i)=>{
+    el.dataset.eid='script-'+i;
+    el.contentEditable='true';
+    el.spellcheck=false;
+  });
+  document.querySelectorAll('.tdesc').forEach((el,i)=>{
+    el.dataset.eid='desc-'+i;
+    el.contentEditable='true';
+    el.spellcheck=false;
+  });
+  document.addEventListener('blur',e=>{
+    const eid=e.target.dataset&&e.target.dataset.eid;
+    if(!eid)return;
+    editContent[eid]=e.target.innerText;
+    saveToFirebase({content:{...editContent}});
+  },true);
+})();
+
+// Assign indexes on load
+document.querySelectorAll('.cl-box').forEach((box,i)=>box.dataset.idx=i);
+document.querySelectorAll('.tcb').forEach((box,i)=>box.dataset.tidx=i);
+
+// ── SERVICE WORKER ─────────────────────────────────────────────────
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
 </body>
 </html>
