@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Agency Playbook">
-<meta name="theme-color" content="#111827"> <!-- Updated to match dark top bar -->
+<meta name="theme-color" content="#1a56db">
 <link rel="manifest" href="manifest.json">
 <title>Agency Playbook v7</title>
 <!-- Firebase -->
@@ -24,101 +24,119 @@
   --rd:#dc2626;--rd-bg:#fef2f2;--rd-tx:#dc2626;
   --r:13px;--rsm:9px;--rxs:7px;
 }
-
-/* Updated body rules to account for sticky top header */
-body{
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  background:var(--bg);
-  color:var(--tx);
-  padding:16px;
-  padding-top:16px; /* Space immediately below top bar */
-  padding-bottom:50px
-}
-
-/* ── NEW TOP BAR CSS ─────────────────────────────── */
-.topbar {
-  background:#111827;
-  padding: calc(env(safe-area-inset-top, 0px) + 14px) 16px 12px;
-  position: sticky;
-  top: 0;
-  margin: -16px -16px 16px -16px; /* Bleeds perfectly to screen edge */
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.tb-left { flex: 1; }
-.topbar-title { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -.2px; }
-.topbar-sub { font-size: 11px; color: #6b7280; margin-top: 1px; display: flex; align-items: center; gap: 8px; }
-
-#sync-status { font-size: 10px; font-weight: 700; letter-spacing: .03em; padding: 2px 7px; border-radius: 10px; }
-.sy-gr { background: rgba(5,150,105,.25); color: #6ee7b7; }
-.sy-am { background: rgba(217,119,6,.25); color: #fcd34d; }
-.sy-bl { background: rgba(37,99,235,.25); color: #93c5fd; }
-.sy-rd { background: rgba(220,38,38,.25); color: #fca5a5; }
-
-.add-btn { 
-  background: var(--bl); 
-  color: #fff; 
-  border: none; 
-  border-radius: var(--rsm); 
-  padding: 8px 14px; 
-  font-size: 13px; 
-  font-weight: 700; 
-  cursor: pointer; 
-  white-space: nowrap; 
-  -webkit-tap-highlight-color: transparent; 
-}
-/* ────────────────────────────────────────────────── */
-
-/* ── TOP BAR STYLES FOR AGENCY PLAYBOOK ── */
-body { padding-top: 16px; }
-.topbar {
-  background:#111827;
-  padding: calc(env(safe-area-inset-top, 0px) + 14px) 16px 12px;
-  position: sticky;
-  top: 0;
-  margin: -14px -14px 16px -14px;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.tb-left { flex: 1; }
-.topbar-title { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -.2px; }
-.topbar-sub { font-size: 11px; color: #6b7280; margin-top: 1px; display: flex; align-items: center; gap: 8px; }
-#sync-status { font-size: 10px; font-weight: 700; letter-spacing: .03em; padding: 2px 7px; border-radius: 10px; }
-.sy-gr { background: rgba(5,150,105,.25); color: #6ee7b7; }
-.sy-am { background: rgba(217,119,6,.25); color: #fcd34d; }
-.sy-bl { background: rgba(37,99,235,.25); color: #93c5fd; }
-.sy-rd { background: rgba(220,38,38,.25); color: #fca5a5; }
-.add-btn { 
-  background: var(--bl); 
-  color: #fff; 
-  border: none; 
-  border-radius: var(--rsm); 
-  padding: 8px 14px; 
-  font-size: 13px; 
-  font-weight: 700; 
-  cursor: pointer; 
-  white-space: nowrap; 
-  -webkit-tap-highlight-color: transparent; 
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);padding:14px;padding-bottom:50px}
+.app-sub{font-size:13px;color:var(--tx3);margin-bottom:20px}
+/* SYNC BAR */
+#sync-bar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--sur);border-bottom:1px solid var(--bdr);margin:-14px -14px 16px;font-size:12px;font-weight:600}
+#sync-status{font-size:11px;font-weight:700;letter-spacing:.03em}
+.sy-gr{color:var(--gr-tx)}.sy-am{color:var(--am-tx)}.sy-bl{color:var(--bl-tx)}.sy-rd{color:var(--rd-tx)}
+/* EDITABLE */
+[data-eid]{border-radius:var(--rxs);outline:none;transition:box-shadow .15s}
+[data-eid]:focus{box-shadow:0 0 0 2px var(--bl);background:var(--sur2)}
+/* NAV */
+.nav{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.nbtn{width:100%;padding:15px 16px;border:1.5px solid var(--bdr2);border-radius:var(--r);font-size:15px;font-weight:500;cursor:pointer;background:var(--sur);color:var(--tx2);text-align:left;display:flex;align-items:center;justify-content:space-between;-webkit-tap-highlight-color:transparent}
+.nbtn.active{background:var(--bl-bg);color:var(--bl-tx);border-color:var(--bl)}
+.nbtn .arr{font-size:11px;opacity:.4}
+.sec{display:none}.sec.active{display:block}
+/* COPY */
+.cpbar{display:flex;justify-content:flex-end;margin-bottom:12px}
+.cpbtn{padding:8px 15px;border:1.5px solid var(--bdr2);border-radius:var(--rsm);font-size:13px;font-weight:600;cursor:pointer;background:var(--sur);color:var(--tx2)}
+/* CARD */
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:16px;margin-bottom:12px}
+/* TEXT */
+.sh{font-size:20px;font-weight:800;margin-bottom:4px;letter-spacing:-.2px}
+.ss{font-size:14px;color:var(--tx3);margin-bottom:16px;line-height:1.55}
+.lbl{font-size:11px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px;margin-top:14px}
+.lbl:first-child{margin-top:0}
+.tdesc{font-size:14px;line-height:1.65;color:var(--tx2);margin-bottom:11px}
+/* BADGES */
+.pr{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.badge{font-size:12px;font-weight:600;padding:5px 10px;border-radius:var(--rxs)}
+.b-bl{background:var(--bl-bg);color:var(--bl-tx)}.b-gr{background:var(--gr-bg);color:var(--gr-tx)}.b-am{background:var(--am-bg);color:var(--am-tx)}.b-gy{background:#f0f0f5;color:#5a5a6a}.b-pu{background:var(--pu-bg);color:var(--pu-tx)}.b-rd{background:var(--rd-bg);color:var(--rd-tx)}
+/* CALLOUTS */
+.tip{background:var(--gr-bg);border-radius:var(--rsm);padding:12px 14px;font-size:13px;color:var(--gr-tx);line-height:1.6;margin-top:8px}
+.warn{background:var(--am-bg);border-radius:var(--rsm);padding:12px 14px;font-size:13px;color:var(--am-tx);line-height:1.6;margin-top:8px}
+.info{background:var(--bl-bg);border-radius:var(--rsm);padding:12px 14px;font-size:13px;color:var(--bl-tx);line-height:1.6;margin-top:8px}
+.danger{background:var(--rd-bg);border-radius:var(--rsm);padding:12px 14px;font-size:13px;color:var(--rd-tx);line-height:1.6;margin-top:8px}
+/* ROWS */
+.row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--bdr);gap:12px}
+.row:last-child{border-bottom:none}
+.rl{flex:1}.rl strong{display:block;font-size:14px;font-weight:700;margin-bottom:2px}.rl small{font-size:13px;color:var(--tx3);line-height:1.5}
+.price{font-size:14px;font-weight:700;text-align:right;white-space:nowrap}
+.trial{display:block;font-size:11px;color:var(--gr-tx);margin-top:2px;font-weight:500}
+.tot-row{display:flex;justify-content:space-between;padding:12px 0 0;border-top:2px solid var(--bdr2);margin-top:4px}
+.tot-l{font-size:16px;font-weight:700}
+.tot-p{font-size:18px;font-weight:800;color:var(--gr-tx)}
+.divider{height:1px;background:var(--bdr);margin:12px 0}
+/* SCRIPT */
+.script{background:var(--bg);border-left:3px solid var(--bl);border-radius:0 var(--rsm) var(--rsm) 0;padding:12px 14px;font-size:14px;line-height:1.75;color:var(--tx);margin-bottom:10px;white-space:pre-wrap}
+/* TEMPLATE LABEL */
+.tlbl{font-size:12px;font-weight:700;color:var(--bl-tx);background:var(--bl-bg);padding:5px 10px;border-radius:var(--rxs);display:inline-block;margin-bottom:9px}
+/* FOR ME / FOR CLIENT */
+.for-me{font-size:11px;font-weight:700;color:var(--pu-tx);background:var(--pu-bg);padding:3px 9px;border-radius:20px;display:inline-block;margin-bottom:6px}
+.for-client{font-size:11px;font-weight:700;color:var(--gr-tx);background:var(--gr-bg);padding:3px 9px;border-radius:20px;display:inline-block;margin-bottom:6px}
+/* STEPS */
+.step{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--bdr)}
+.step:last-child{border-bottom:none}
+.sn{min-width:27px;height:27px;background:var(--bl);color:#fff;border-radius:50%;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.st strong{display:block;font-size:14px;font-weight:700;margin-bottom:2px}
+.st span{font-size:13px;color:var(--tx3);line-height:1.5}
+/* CHECKLIST */
+.phase{margin-bottom:12px}
+.phase-hdr{display:flex;align-items:center;gap:10px;padding:13px 14px;background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.phase-hdr.open{border-radius:var(--r) var(--r) 0 0;border-bottom-color:transparent}
+.phase-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
+.phase-info{flex:1}.phase-info strong{display:block;font-size:14px;font-weight:700}.phase-info span{font-size:12px;color:var(--tx3)}
+.phase-stat{font-size:12px;font-weight:700;color:var(--tx3)}
+.phase-ch{font-size:11px;color:var(--tx4);margin-left:5px;display:inline-block;transition:transform .2s}.phase-ch.open{transform:rotate(180deg)}
+.phase-body{display:none;background:var(--sur);border:1px solid var(--bdr);border-top:none;border-radius:0 0 var(--r) var(--r)}.phase-body.open{display:block}
+.cl-item{display:flex;align-items:flex-start;gap:11px;padding:11px 14px;border-bottom:1px solid var(--bg)}
+.cl-item:last-child{border-bottom:none}
+.cl-box{width:22px;height:22px;border:2px solid var(--bdr2);border-radius:6px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s}
+.cl-box.done{background:var(--gr);border-color:var(--gr)}
+.cl-box.done::after{content:'✓';font-size:12px;color:#fff;font-weight:800}
+.cl-text strong{display:block;font-size:14px;font-weight:600;margin-bottom:2px;line-height:1.4}
+.cl-text strong.done{color:var(--tx3);text-decoration:line-through}
+.cl-text span{font-size:12px;color:var(--tx3);line-height:1.5}
+.pb{height:4px;background:var(--bdr);border-radius:2px;margin:7px 14px 3px;overflow:hidden}
+.pf{height:100%;background:var(--gr);border-radius:2px;transition:width .3s}
+.pl{font-size:11px;color:var(--tx3);padding:0 14px 7px}
+/* OVERALL */
+.ov-card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:14px 16px;margin-bottom:14px}
+.ov-top{display:flex;justify-content:space-between;margin-bottom:7px}
+.ov-title{font-size:14px;font-weight:700}
+.ov-pct{font-size:14px;font-weight:800;color:var(--gr-tx)}
+/* SECTION LABEL */
+.sec-lbl{font-size:12px;font-weight:700;color:var(--bl-tx);background:var(--bl-bg);padding:5px 11px;border-radius:var(--rxs);display:block;margin:14px 0 8px}
+.sec-lbl:first-child{margin-top:0}
+/* TAX / SETUP CHECKBOXES */
+.tax-item{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--bdr)}
+.tax-item:last-child{border-bottom:none}
+.tcb{width:22px;height:22px;border:2px solid var(--bdr2);border-radius:6px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s}
+.tcb.done{background:var(--gr);border-color:var(--gr)}
+.tcb.done::after{content:'✓';font-size:12px;color:#fff;font-weight:800}
+.ti strong{display:block;font-size:14px;font-weight:600;margin-bottom:2px}
+.ti span{font-size:13px;color:var(--tx3);line-height:1.5}
+/* DARK */
+@media(prefers-color-scheme:dark){
+  :root{--bg:#000;--sur:#1c1c1e;--sur2:#2c2c2e;--bdr:#2c2c2e;--bdr2:#3a3a3c;--tx:#f5f5f7;--tx2:#e5e5ea;--tx3:#98989d;--tx4:#636366;--bl-bg:#162247;--bl-tx:#6fa3f8;--gr-bg:#0d2d1f;--gr-tx:#30d158;--am-bg:#2d1f00;--am-tx:#f59e0b;--pu-bg:#1e1347;--pu-tx:#a78bfa;--rd-bg:#2d0f0f;--rd-tx:#f87171}
+  .b-gy{background:#2c2c2e;color:#aeaeb2}
+  .phase-hdr,.phase-body{background:var(--sur)}
+  .cl-item{border-color:var(--bg)}
+  .nbtn{background:var(--sur);color:var(--tx2)}
+  .script{background:var(--sur2);color:var(--tx)}
+  .cpbtn{background:var(--sur);color:var(--tx2)}
+  #sync-bar{background:var(--sur);border-color:var(--bdr)}
 }
 </style>
 </head>
 <body>
-
-<!-- NEW TOP BAR HTML STRUCT MATCHING "Client Board.jpg" -->
-<div class="topbar">
-  <div class="tb-left">
-    <div class="topbar-title">Agency Playbook</div>
-    <div class="topbar-sub">
-      <span id="ts">v7.0</span>
-      <span id="sync-status" class="sy-bl">↓ Loading</span>
-    </div>
-  </div>
-  <button class="add-btn" onclick="openNew()">+ New Strategy</button>
+<div id="sync-bar">
+  <span style="font-size:13px;font-weight:800;letter-spacing:-.2px">Agency Playbook</span>
+  <span id="sync-status" class="sy-bl">↓ Loading…</span>
 </div>
+<p class="app-sub">v7 — 9 tabs, synced across all devices</p>
 
 <div class="nav">
   <button class="nbtn active" onclick="show('s1',this)"><span>💼 Services &amp; pricing</span><span class="arr">▼</span></button>
